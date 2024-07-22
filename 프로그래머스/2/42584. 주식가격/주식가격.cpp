@@ -29,16 +29,10 @@ vector<int> solution(vector<int> prices) {
         }
     }
    
-    for (int i = 0; i < price_dot.size(); i++) {
-        answer[price_dot.top().index] = prices.size() - 1 - price_dot.top().index;
-        price_dot.pop();
-    }
-
     for (int i = 0; i < answer.size(); i++) {
         if (answer[i] == -1)
             answer[i] = prices.size() - 1 - i;
     }
-
 
     return answer;
 }
