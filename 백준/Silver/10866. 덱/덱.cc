@@ -7,6 +7,8 @@ using namespace std;
 
 int main(void)
 {
+    cin.tie(nullptr);
+    ios_base::sync_with_stdio(false);
 	deque<int> deque;
 	int N;
 	cin >> N;
