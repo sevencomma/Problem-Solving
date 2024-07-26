@@ -34,6 +34,8 @@ public:
 
 int main()
 {
+    cin.tie(nullptr);
+    ios_base::sync_with_stdio(false);
 	Stack Stack; 
 	int N;
 	int m;
