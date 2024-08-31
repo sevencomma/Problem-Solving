@@ -11,19 +11,12 @@ struct tree {
 	int orange;
 };
 
-bool compare(const tree a, const tree b) {
-	if (a.orange == b.orange)
-		return a.index > b.index;
-	return a.orange > b.orange;
-}
-
 int gcd(int a, int b) {
 	while (b % a != 0) {
 		int temp = a;
 		a = b % a;
 		b = temp;
 	}
-
 	return a;
 }
 
@@ -45,7 +38,7 @@ void bfs(int start, vector<tree> & num) {
 		int max_orange = 0;
 
 		for (auto& it : graph[cur]) {
-			if (num[it].orange > 0 && max_orange <= num[it].orange) {
+			if (max_orange <= num[it].orange && num[it].orange > 0) {
 				target = it;
 				max_orange = num[it].orange;
 			}
@@ -74,6 +67,7 @@ int main(void)
 
 	vector<tree> num(N+1);
 	vector<int> check(N, 0);
+
 	for (int i = 1; i <= N; i++)
 		num[i] = { i, 0 };
 	check[0] = check[1] = 1;
@@ -93,14 +87,13 @@ int main(void)
 	num[1].orange++;
 
 	bfs(N, num);
+
 	for (int i = 1; i <= N; i++)
 		if (num[i].orange != 0) {
 			cout << -1;
 			return 0;
 		}
 
-	int i = 0;
-	for (i = 0; i < result.size() - 1; i++)
-		cout << result[i] << " ";
-	cout << result[i];
+	for (auto & it : result)
+		cout << it << " ";
 }
