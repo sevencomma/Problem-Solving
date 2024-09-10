@@ -18,6 +18,9 @@ void back_tracking(int cnt) {
 }
 
 int main(void) {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
 	cin >> n >> m;
 	back_tracking(0);
 }
