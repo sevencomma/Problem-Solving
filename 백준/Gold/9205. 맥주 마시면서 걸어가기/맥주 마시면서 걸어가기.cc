@@ -12,11 +12,6 @@ int distance(int y, int x, int Y, int X) {
 	return (abs(y - Y) + abs(x - X));
 }
 
-int cur_y, cur_x;
-bool compare(point a, point b) {
-	return distance(a.y, a.x, cur_y, cur_x) < distance(b.y, b.x, cur_y, cur_x);
-}
-
 bool can_go(vector<point> &node) {
 	queue<point> q;
 	q.push({ start_y, start_x });
@@ -28,9 +23,6 @@ bool can_go(vector<point> &node) {
 
 		if (distance(cur.y, cur.x, final_y, final_x) <= 1000)
 			return true;
-
-		cur_y = cur.y;
-		cur_x = cur.x;
 
 		for (int i = 0; i < node.size(); i++) {
 			if (!visited[i] && distance(node[i].y, node[i].x, cur.y, cur.x) <= 1000) {
