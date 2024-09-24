@@ -18,8 +18,7 @@ bool is_in_range(int y, int x) {
 int bfs(int y, int x) {
 	queue<point> q;
 	q.push({ y, x, 0, 1 });
-	for (int c = 0; c < 11; c++)
-		visited[y][x][c] = true;
+	visited[y][x][0] = true;
 
 	while (!q.empty()) {
 		point cur = q.front();
@@ -36,13 +35,11 @@ int bfs(int y, int x) {
 				continue;
 			if (board[cy][cx] == '1' && cur.cnt < K && !visited[cy][cx][cur.cnt + 1]) {
 				q.push({ cy, cx, cur.cnt + 1, cur.d + 1 });
-				for (int c = cur.cnt + 1; c < 11; c++)
-					visited[cy][cx][c] = true;
+				visited[cy][cx][cur.cnt + 1] = true;
 			}
 			else if (board[cy][cx] == '0' && !visited[cy][cx][cur.cnt]) {
 				q.push({ cy, cx, cur.cnt, cur.d + 1 });
-				for (int c = cur.cnt; c < 11; c++)
-					visited[cy][cx][c] = true;
+				visited[cy][cx][cur.cnt] = true;
 			}
 		}
 	}
