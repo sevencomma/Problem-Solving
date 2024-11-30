@@ -1,13 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 /*
-각 좌표들에 bfs돌리면서 연결요소로 분할한 다음
-각 연결요소를 노드로 하는 새로운 그래프생성
-그 그래프에서 최소신장 트리 생성비용--> 답
+1. 각 좌표들에 bfs돌리면서 연결요소로 분할한 다음
+2. 각 연결요소를 노드로 하는 새로운 그래프생성
+3. 그 그래프에서 최소신장 트리 생성비용--> 답
 */
 
 int N, H;
 
+// 1. 
 struct point {
     int y, x;
 };
@@ -50,6 +51,7 @@ void bfs(int y, int x, vector<vector<int>> & land) {
     }
 }
 
+// 2.
 struct edge {
     int node1, node2, weight;
 };
@@ -60,6 +62,7 @@ struct cmp {
     }
 };
 
+// 3.
 priority_queue<edge, vector<edge>, cmp> pq;
 int Parent[90002];
 int Rank[90002];
@@ -104,12 +107,12 @@ int kruskal() {
 int solution(vector<vector<int>> land, int height) {
     N = land.size();
     H = height;
-    // 각 좌표 연결요소로 분할
+    // 1. 각 좌표 연결요소로 분할
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++)
             bfs(i, j, land);
     
-    // 새로운 그래프의 간선 정보
+    // 2. 로운 그래프의 간선 정보
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++)
             for (int k = 0; k < 2; k++) {
@@ -127,7 +130,7 @@ int solution(vector<vector<int>> land, int height) {
                 pq.push({cur, next, weight});
             }
     
-    // 최소신장트리
+    // 3. 최소신장트리
     for (int i = 1; i <= land_kind; i++)
         Parent[i] = i;
     
