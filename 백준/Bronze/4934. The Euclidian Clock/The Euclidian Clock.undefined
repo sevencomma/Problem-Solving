@@ -1,0 +1,21 @@
+#define _USE_MATH_DEFINES
+#include <bits/stdc++.h>
+using namespace std;
+
+int T;
+double clock_data[2][4];
+double area, R;
+
+int main(void) {
+	cin >> T;
+	for (int game = 1; game <= T; game++) {
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 4; j++)
+				cin >> clock_data[i][j];
+		cin >> R;
+		double r1 = clock_data[0][0] * 30 + clock_data[0][1] * 1 / 2 + clock_data[0][2] * 1 / 120 + clock_data[0][3] * 1 / 12000;
+		double r2 = clock_data[1][0] * 30 + clock_data[1][1] * 1 / 2 + clock_data[1][2] * 1 / 120 + clock_data[1][3] * 1 / 12000;
+		area = R * R * M_PI * abs(r1 - r2) / 360;
+		printf("%d. %.3f\n", game, area);
+	}
+}
