@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, H, W, x;
+bool window[10000];
+struct point {
+	int begin, end;
+};
+vector<point> seq;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> H >> W;
+	seq.resize(N);
+	for (int i = 0; i < N; i++) {
+		cin >> x;
+		if (i % 2 == 0)
+			seq[i] = { i * W + x, (i + 1) * W + x };
+		else
+			seq[i] = { i * W - x, (i + 1) * W - x };
+	}
+	for (auto& it : seq)
+		for (int i = it.begin; i < it.end; i++)
+			window[i] = true;
+	int res = 0;
+	for (int i = 0; i < N * W; i++)
+		if (!window[i])
+			res++;
+	cout << res * H;
+}
