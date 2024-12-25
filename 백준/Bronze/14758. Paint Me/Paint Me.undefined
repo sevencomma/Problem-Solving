@@ -1,0 +1,20 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n, w, l, h, a, m, ta, tb;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	while (1) {
+		cin >> n >> w >> l >> h >> a >> m;
+		if (n == 0)
+			break;
+		int src = w * l + (w + l) * h * 2;
+		for (int i = 0; i < m; i++) {
+			cin >> ta >> tb;
+			src -= ta * tb;
+		}
+		cout << ceil((double)(src * n) / a) << '\n';
+	}
+}
