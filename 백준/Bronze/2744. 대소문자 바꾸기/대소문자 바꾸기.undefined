@@ -1,0 +1,14 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s;
+
+int main(void) {
+	getline(cin, s);
+	for (auto& it : s) {
+		if (isupper(it))
+			cout << (char)tolower(it);
+		else
+			cout << (char)toupper(it);
+	}
+}
