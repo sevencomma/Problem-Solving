@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+priority_queue<int> down;
+priority_queue<int, vector<int>, greater<int>> up;
+int mid, N, x, down_size, up_size;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> mid;
+	cout << mid << '\n';
+
+	for (int i = 1; i < N; i++) {
+		cin >> x;
+		if (down_size < up_size) {
+			down_size++;
+			if (x > mid) {
+				down.push(mid);
+				up.push(x);
+				mid = up.top();
+				up.pop();
+			}
+			else
+				down.push(x);
+		}
+		else { // down_size == up_size
+			up_size++;
+			if (x > mid)
+				up.push(x);
+			else {
+				up.push(mid);
+				down.push(x);
+				mid = down.top();
+				down.pop();
+			}
+		}
+		cout << mid << '\n';
+	}
+}
