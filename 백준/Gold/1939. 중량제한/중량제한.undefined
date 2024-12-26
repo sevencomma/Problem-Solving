@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct edge {
+	int node, weight;
+};
+
+struct cmp {
+	bool operator() (edge a, edge b) const {
+		return a.weight < b.weight;
+	}
+};
+
+int N, M, a, b, c;
+vector<vector<edge>> graph;
+int weight[100001];
+
+void dijkstra(int start, int target) {
+	priority_queue<edge, vector<edge>, cmp> pq;
+	pq.push({ start, INT_MAX });
+	weight[start] = INT_MAX;
+
+	while (!pq.empty()) {
+		edge cur = pq.top();
+		pq.pop();
+
+		if (weight[cur.node] > cur.weight)
+			continue;
+
+		for (auto& it : graph[cur.node]) {
+			if (weight[it.node] >= min(weight[cur.node], it.weight))
+				continue;
+
+			weight[it.node] = min(weight[cur.node], it.weight);
+			pq.push({ it.node, weight[it.node] });
+		}
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	graph.resize(N + 1);
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b >> c;
+		graph[a].push_back({ b, c });
+		graph[b].push_back({ a, c });
+	}
+	int start, target;
+	cin >> start >> target;
+	dijkstra(start, target);
+	cout << weight[target];
+}
