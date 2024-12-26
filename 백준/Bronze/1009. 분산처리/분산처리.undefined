@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, a, b;
+int d[10][10];
+
+int main(void) {
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> a >> b;
+		int idx = 1;
+		a = a % 10;
+		int A = a;
+		d[a][idx++] = A;
+		if (A == 0) {
+			cout << 10 << '\n';
+			continue;
+		}
+
+		a = (a * A) % 10;
+		while (a != A) {
+			d[A][idx++] = a;
+			a = (a * A) % 10;
+		}
+		idx--;
+		if (b % idx == 0)
+			cout << d[A][idx] << '\n';
+		else
+			cout << d[A][b % idx] << '\n';
+	}
+}
