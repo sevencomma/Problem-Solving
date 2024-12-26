@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct point {
+	int node;
+	long long weight;
+};
+
+int N, x;
+vector<vector<point>> graph;
+int in_degree[501];
+long long input_time[501];
+long long complete_time[501];
+
+void top_sort() {
+	queue<point> q;
+	for (int i = 1; i <= N; i++)
+		if (in_degree[i] == 0) {
+			q.push({ i, input_time[i] });
+			complete_time[i] = input_time[i];
+		}
+
+	while (!q.empty()) {
+		point cur = q.front();
+		q.pop();
+
+		for (auto& it : graph[cur.node]) {
+			in_degree[it.node]--;
+			complete_time[it.node] = max(complete_time[it.node], cur.weight + input_time[it.node]);
+			if (in_degree[it.node] == 0)
+				q.push({ it.node, complete_time[it.node] });
+		}
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	graph.resize(N + 1);
+	for (int i = 1; i <= N; i++) {
+		cin >> input_time[i];
+		while (1) {
+			cin >> x;
+			if (x == -1)
+				break;
+			graph[x].push_back({i, input_time[i]});
+			in_degree[i]++;
+		}
+	}
+	top_sort();
+	for (int i = 1; i <= N; i++)
+		cout << complete_time[i] << '\n';
+}
