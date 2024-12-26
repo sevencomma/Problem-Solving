@@ -1,0 +1,11 @@
+#include <bits/stdc++.h>
+using namespace std;
+int a, b, c;
+#define SWAP(x, y) ((x)^=(y), (y)^=(x), (x)^=(y))
+int main(void) {
+	cin >> a >> b >> c;
+	if (a > b) SWAP(a, b);
+	if (a > c) SWAP(a, c);
+	if (b > c) SWAP(b, c);
+	cout << a << ' ' << b << ' ' << c;
+}
