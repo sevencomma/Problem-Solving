@@ -1,0 +1,24 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+deque<int> dq;
+int N, M, x, pos = 1, res, t, cnt;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 1; i <= N; i++)
+		dq.push_back(i);
+	for (int i = 0; i < M; i++) {
+		cin >> x;
+		cnt = 0;
+		while ((t = dq.front()) != x) {
+			dq.pop_front();
+			dq.push_back(t);
+			cnt++;
+		}
+		res += min(cnt, (int)dq.size() - cnt);
+		dq.pop_front();
+	} cout << res;
+}
