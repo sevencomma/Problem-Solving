@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct point {
+	int y, x;
+};
+
+int dy[4] = { 0, 1, 0, -1 };	// 오 아 왼 위
+int dx[4] = { 1, 0, -1, 0 };
+int N, a, b, c, d, dir, cur_t;
+int board[101][101];
+vector<pair<int, char>> cmd;
+queue<point> bamm;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> a;
+	for (int i = 0; i < a; i++) {
+		cin >> c >> d;
+		board[c][d] = 1; // apple
+	}
+	cin >> b;
+	cmd.resize(b);
+	for (int i = 0; i < b; i++)
+		cin >> cmd[i].first >> cmd[i].second;
+	bamm.push({ 1, 1 });
+	board[1][1] = 2; // bamm
+	int index = 0;
+	while (1) {
+		if (index < cmd.size() && cur_t == cmd[index].first) {
+			if (cmd[index].second == 'D')
+				dir = (dir + 1) % 4;
+			else
+				dir = (dir + 3) % 4;
+			index++;
+		}
+		point cur = bamm.back();
+		int cy = cur.y + dy[dir];
+		int cx = cur.x + dx[dir];
+		cur_t++;
+		if (cy <= 0 || cx <= 0 || cy > N || cx > N)
+			break;
+		if (board[cy][cx] == 2)
+			break;
+		if (board[cy][cx] != 1) {
+			point temp = bamm.front();
+			bamm.pop();
+			board[temp.y][temp.x] = 0;
+		}
+		bamm.push({ cy, cx });
+		board[cy][cx] = 2;
+	}
+	cout << cur_t;
+}
