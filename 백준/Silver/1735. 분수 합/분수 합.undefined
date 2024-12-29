@@ -1,0 +1,21 @@
+#include <bits/stdc++.h>
+using namespace std;
+int a, b, c, d, x, y;
+int gcd(int x, int y) {
+	if (x < y)
+		x ^= y, y ^= x, x ^= y;
+	while (x % y != 0) {
+		int t = x;
+		x = y;
+		y = t % x;
+	}
+	return y;
+}
+
+int main(void) {
+	cin >> a >> b >> c >> d;
+	x = a * d + b * c;
+	y = b * d;
+	int g = gcd(x, y);
+	cout << x / g << ' ' << y / g;
+}
