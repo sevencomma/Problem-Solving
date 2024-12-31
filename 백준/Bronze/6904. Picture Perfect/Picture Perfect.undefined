@@ -1,0 +1,18 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int a, b, c;
+
+int main(void) {
+	while (1) {
+		cin >> a;
+		if (a == 0)
+			break;
+
+		b = sqrt(a);
+		while (a % b != 0)
+			b--;
+		c = a / b;
+		printf("Minimum perimeter is %d with dimensions %d x %d\n", 2 * (b + c), b, c);
+	}
+}
