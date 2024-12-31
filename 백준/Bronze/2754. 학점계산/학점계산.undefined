@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+char a, b;
+double grade;
+
+int main(void) {
+	cin >> a >> b;
+	switch (a) {
+	case 'A': grade = 4; break;
+	case 'B': grade = 3; break;
+	case 'C': grade = 2; break;
+	case 'D': grade = 1; break;
+	default : grade = 0;
+	}
+	switch (b) {
+	case '+': grade += 0.3; break;
+	case '0': break;
+	case '-': grade -= 0.3;
+	}
+	printf("%.1f", grade);
+}
