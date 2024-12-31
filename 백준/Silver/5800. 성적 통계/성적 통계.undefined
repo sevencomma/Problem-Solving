@@ -1,0 +1,18 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(void) {
+	int K, N, max_d; cin >> K;
+	for (int i = 1; i <= K; i++) {
+		cin >> N;
+		max_d = 0;
+		vector<int> seq(N);
+		for (int j = 0; j < N; j++)
+			cin >> seq[j];
+		sort(seq.begin(), seq.end());
+		for (int c = 0; c < N - 1; c++)
+			max_d = max(max_d, seq[c + 1] - seq[c]);
+		printf("Class %d\n", i);
+		printf("Max %d, Min %d, Largest gap %d\n", seq[N-1], seq[0], max_d);
+	}
+}
