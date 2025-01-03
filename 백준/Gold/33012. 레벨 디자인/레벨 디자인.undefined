@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+deque<int> dq;
+vector<int> seq;
+long long N, a1, a2;
+
+int main(void) {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = N; i > 0; i--) {
+		if (i % 2)
+			dq.push_front(i);
+		else
+			dq.push_back(i);
+	}
+	while (!dq.empty()) {
+		seq.push_back(dq.front());
+		dq.pop_front();
+	}
+	for (auto& it : seq)
+		cout << it << ' ';
+	for (int i = 0; i < seq.size(); i += 2)
+		a1 += seq[i];
+	for (int i = 1; i < seq.size(); i += 2)
+		a2 += seq[i];
+	cout << '\n' << max(a1, a2);
+}
