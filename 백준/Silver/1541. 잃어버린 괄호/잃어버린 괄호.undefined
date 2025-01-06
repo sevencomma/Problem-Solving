@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s;
+int n, res, mode; // mode = {0 : +, 1 : -}
+
+int main(void) {
+	getline(cin, s);
+	
+	for (auto& it : s) {
+		if (it >= '0' && it <= '9')
+			n = n * 10 + it - '0';
+		else {
+			if (mode == 1)
+				res -= n;
+			else
+				res += n;
+			n = 0;
+			if (it == '-')
+				mode = 1;
+		}
+	}
+	if (mode == 1)
+		res -= n;
+	else
+		res += n;
+	cout << res;
+}
