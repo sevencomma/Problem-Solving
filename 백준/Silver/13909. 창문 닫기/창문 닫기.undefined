@@ -1,0 +1,10 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+// 완전제곱수의 개수
+int n;
+
+int main(void) {
+	cin >> n;
+	cout << int(sqrt(n));
+}
