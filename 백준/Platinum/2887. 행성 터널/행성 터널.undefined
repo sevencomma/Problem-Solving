@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+vector<pair<int, int>> X; // { pos_val, index }
+vector<pair<int, int>> Y;
+vector<pair<int, int>> Z;
+
+// kruskal
+
+struct edge {
+	int node1, node2, weight;
+};
+
+struct cmp {
+	bool operator() (edge& a, edge& b) const {
+		return a.weight > b.weight;
+	}
+};
+
+priority_queue<edge, vector<edge>, cmp> pq;
+int Parent[100000];
+int Rank[100000];
+int res;
+
+void Link(int x, int y) {
+	if (Rank[x] > Rank[y])
+		Parent[y] = x;
+	else {
+		Parent[x] = y;
+		if (Rank[x] == Rank[y])
+			Rank[y]++;
+	}
+}
+
+int Find(int x) {
+	if (Parent[x] != x)
+		Parent[x] = Find(Parent[x]);
+	return Parent[x];
+}
+
+void Union(int x, int y) {
+	Link(Find(x), Find(y));
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	// part1
+	cin >> N;
+	X.resize(N), Y.resize(N), Z.resize(N);
+	for (int i = 0; i < N; i++) {
+		cin >> X[i].first; X[i].second = i;
+		cin >> Y[i].first; Y[i].second = i;
+		cin >> Z[i].first; Z[i].second = i;
+
+		Parent[i] = i;
+	}
+	sort(X.begin(), X.end());
+	sort(Y.begin(), Y.end());
+	sort(Z.begin(), Z.end());
+
+	// part2
+	int a, b, c;
+	for (int i = 0; i < N - 1; i++) {
+		a = abs(X[i].first - X[i + 1].first);
+		b = abs(Y[i].first - Y[i + 1].first);
+		c = abs(Z[i].first - Z[i + 1].first);
+		pq.push({ X[i].second, X[i + 1].second, a });
+		pq.push({ Y[i].second, Y[i + 1].second, b });
+		pq.push({ Z[i].second, Z[i + 1].second, c });
+	}
+
+	while (!pq.empty()) {
+		edge cur = pq.top();
+		pq.pop();
+
+		if (Find(cur.node1) == Find(cur.node2))
+			continue;
+
+		res += cur.weight;
+		Union(cur.node1, cur.node2);
+	}
+	cout << res;
+}
