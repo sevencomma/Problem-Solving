@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+vector<pair<int, int>> lis; // { val, index }
+vector<int> seq;
+vector<int> parent;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	seq.resize(N);
+	parent.resize(N);
+
+	for (int i = 0; i < N; i++)
+		cin >> seq[i];
+	lis.push_back({ INT_MIN, -1 });
+	for (int i = 0; i < N; i++) {
+		if (lis.back().first < seq[i]) {
+			parent[i] = lis.back().second;
+			lis.push_back({ seq[i], i });
+		}
+		else {
+			int l = 0, r = lis.size() - 1, mid;
+			while (l < r) {
+				mid = (l + r) / 2;
+				if (lis[mid].first < seq[i])
+					l = mid + 1;
+				else
+					r = mid;
+			}
+			parent[i] = lis[r - 1].second;
+			lis[r] = { seq[i], i };
+		}
+	}
+	cout << lis.size() - 1 << '\n';
+	stack<int> s;
+	int index = lis.back().second;
+	while (index != -1) {
+		s.push(index);
+		index = parent[index];
+	}
+	while (!s.empty()) {
+		cout << seq[s.top()] << ' ';
+		s.pop();
+	}
+}
