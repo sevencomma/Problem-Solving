@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 정점 : ee, le 간선 : e, l
+
+struct edge {
+	int to, weight, number;
+};
+
+int N, M, a, b, c, res;
+vector<vector<edge>> graph;
+vector<vector<edge>> transpose_graph;
+vector<int> G_indegree;
+vector<int> Gt_indegree;
+
+vector<int> ee;
+vector<int> le;
+vector<int> e;
+vector<int> l;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	graph.resize(N + 1); transpose_graph.resize(N + 1);
+	G_indegree.resize(N + 1); Gt_indegree.resize(N + 1);
+	ee.resize(N + 1); le.resize(N + 1);
+	e.resize(M); l.resize(M);
+	
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b >> c;
+		graph[a].push_back({ b, c, i });
+		transpose_graph[b].push_back({ a, c, i });
+		G_indegree[b]++;
+		Gt_indegree[a]++;
+	}
+
+	// g -> top sort (max weight)
+	// ee
+	queue<int> q;
+	for (int i = 1; i <= N; i++)
+		if (G_indegree[i] == 0) {
+			q.push(i);
+			ee[i] = 0;
+		}
+	while (!q.empty()) {
+		int cur = q.front();
+		q.pop();
+		
+		for (auto& it : graph[cur]) {
+			ee[it.to] = max(ee[it.to], ee[cur] + it.weight);
+			if (--G_indegree[it.to] == 0)
+				q.push(it.to);
+		}
+	}
+	// e
+	for (int i = 1; i <= N; i++)
+		for (auto& edge : graph[i])
+			e[edge.number] = ee[i];
+
+	// g_t -> top sort (min_weight)
+	// le
+	for (int i = 1; i <= N; i++)
+		le[i] = INT_MAX;
+
+	for (int i = 1; i <= N; i++)
+		if (Gt_indegree[i] == 0) {
+			q.push(i);
+			le[i] = ee[i];
+		}
+	while (!q.empty()) {
+		int cur = q.front();
+		q.pop();
+
+		for (auto& it : transpose_graph[cur]) {
+			le[it.to] = min(le[it.to], le[cur] - it.weight);
+			if (--Gt_indegree[it.to] == 0)
+				q.push(it.to);
+		}
+	}
+	// l
+	for (int i = 1; i <= N; i++)
+		for (auto& edge : transpose_graph[i])
+			l[edge.number] = le[i] - edge.weight;
+
+	for (int i = 0; i < M; i++)
+		if (e[i] == l[i])
+			res++;
+
+	cout << ee[N] << '\n' << res;
+}
