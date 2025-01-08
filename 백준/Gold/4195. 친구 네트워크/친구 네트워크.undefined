@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+unordered_map<string, int> name;
+
+int T, F, name_index = 1;
+string s1, s2;
+int Parent[200001];
+int Friend[200001];
+
+int Find(int x) {
+	if (Parent[x] != x)
+		Parent[x] = Find(Parent[x]);
+	return Parent[x];
+}
+
+void Union(int a, int b) {
+	int x = Find(a), y = Find(b);
+	
+	if (Friend[x] > Friend[y]) {
+		Parent[y] = x;
+		Friend[x] += Friend[y];
+	}
+	else {
+		Parent[x] = y;
+		Friend[y] += Friend[x];
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	while (T--) {
+		cin >> F;
+		name.clear();
+		name_index = 1;
+		for (int i = 1; i <= 2 * F; i++) {
+			Parent[i] = i;
+			Friend[i] = 1;
+		}
+
+		for (int i = 0; i < F; i++) {
+			cin >> s1 >> s2;
+			int& n1 = name[s1];
+			int& n2 = name[s2];
+			if (n1 == 0)
+				n1 = name_index++;
+			if (n2 == 0)
+				n2 = name_index++;
+
+			if (Find(n1) != Find(n2))
+				Union(n1, n2);
+
+			cout << Friend[Find(n1)] << '\n';
+		}
+	}
+}
