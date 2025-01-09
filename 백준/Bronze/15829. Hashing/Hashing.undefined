@@ -13,6 +13,6 @@ int main(void) {
 		long long x = c - 'a' + 1;
 		for (int j = 0; j < i; j++)
 			x = (x * R) % M;
-		H += x;
+		H = (H + x) % M;
 	} cout << H;
 }
