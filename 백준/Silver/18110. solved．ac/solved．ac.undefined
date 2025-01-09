@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	int N;
+	cin >> N;
+	if (N == 0) {
+		cout << 0;
+		return 0;
+	}
+	vector<int> seq(N);
+	for (int i = 0; i < N; i++)
+		cin >> seq[i];
+	sort(seq.begin(), seq.end());
+	int remove = round(N * (0.15f));
+	int res = 0;
+	for (int i = 0 + remove; i < N - remove; i++)
+		res += seq[i];
+	res = round((double)res / (N - 2 * remove));
+	cout << res;
+}
