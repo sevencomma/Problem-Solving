@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int T, N, M;
+int coin[20];
+int dp[20][10001];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	while (T--) {
+		cin >> N;
+		for (int i = 0; i < N; i++)
+			cin >> coin[i];
+		cin >> M;
+		memset(dp, -1, sizeof(dp));
+		for (int i = 0; i < N; i++) {
+			dp[i][0] = 1;
+			for (int c = 1; c <= M; c++) {
+				int& A = dp[i][c];
+				A = 0;
+				for (int j = 0; j <= i; j++) {
+					int idx = c - coin[j];
+					if (idx < 0)
+						continue;
+					int& B = dp[j][idx];
+					if (B != -1)
+						A += B;
+				}
+			}
+		}
+		cout << dp[N - 1][M] << '\n';
+	}
+}
