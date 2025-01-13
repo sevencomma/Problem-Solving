@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int T, N;
+int dp[2][100000][2];	// row, col, {off, on}
+int seq[2][100000];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	while (T--) {
+		cin >> N;
+		memset(dp, 0, sizeof(dp));
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < N; j++)
+				cin >> seq[i][j];
+		dp[0][0][1] = seq[0][0];
+		dp[1][0][1] = seq[1][0];
+
+		for (int col = 1; col < N; col++) {
+			int val = 0;
+			for (int a = 0; a < 2; a++)
+				for (int b = 0; b < 2; b++)
+					val = max(val, dp[a][col - 1][b]);
+			dp[0][col][0] = dp[1][col][0] = val;
+			dp[0][col][1] = max(dp[1][col - 1][1], max(dp[0][col - 1][0], dp[1][col - 1][0])) + seq[0][col];
+			dp[1][col][1] = max(dp[0][col - 1][1], max(dp[0][col - 1][0], dp[1][col - 1][0])) + seq[1][col];
+		}
+		int res = 0;
+		for (int a = 0; a < 2; a++)
+			for (int b = 0; b < 2; b++)
+				res = max(res, dp[a][N - 1][b]);
+
+		cout << res << '\n';
+	}
+}
