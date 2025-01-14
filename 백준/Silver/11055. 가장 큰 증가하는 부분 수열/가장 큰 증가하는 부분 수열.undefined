@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, res;
+int seq[1000];
+int dp[1000];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> seq[i];
+		dp[i] = seq[i];
+	}
+	for (int i = 1; i < N; i++)
+		for (int j = 0; j < i; j++)
+			if (seq[j] < seq[i])
+				dp[i] = max(dp[i], dp[j] + seq[i]);
+	for (int i = 0; i < N; i++)
+		res = max(res, dp[i]);
+	cout << res;
+}
