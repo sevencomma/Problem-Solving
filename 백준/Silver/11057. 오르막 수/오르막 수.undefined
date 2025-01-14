@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MOD = 10007;
+int N;
+int dp[1001][10];
+
+int func(int index, int num) {
+	if (index == N)
+		return 1;
+	int& ret = dp[index][num];
+	if (ret != 0)
+		return ret;
+	
+	for (int i = num; i < 10; i++)
+		ret = (ret + func(index + 1, i)) % MOD;
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	cout << func(0, 0);
+}
