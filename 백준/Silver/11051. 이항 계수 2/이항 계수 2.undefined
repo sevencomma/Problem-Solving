@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MOD = 10007;
+int N, K;
+int dp[1001][1001];
+
+int func(int n, int k) {
+	if (k == 0 || n == k)
+		return 1;
+	int& ret = dp[n][k];
+	if (ret != 0)
+		return ret;
+	return ret = (func(n - 1, k - 1) + func(n - 1, k)) % MOD;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> K;
+	cout << func(N, K);
+}
