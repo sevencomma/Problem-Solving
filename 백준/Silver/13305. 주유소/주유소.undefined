@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+
+ll N, t, res;
+vector<pair<ll, ll>> price;
+vector<ll> meter;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	price.resize(N - 1);
+	meter.resize(N - 1);
+	for (int i = 0; i < N - 1; i++)
+		cin >> meter[i];
+	for (int i = 0; i < N - 1; i++) {
+		cin >> t;
+		price[i] = { t, i };
+	}
+	cin >> t; // trash;
+
+	vector<ll> D(N, 0); // D : i ~ 끝까지 거리
+	for (int i = N - 2; i >= 0; i--)
+		D[i] = D[i + 1] + meter[i];
+	sort(price.begin(), price.end());
+	ll end = N - 1;
+
+	for (auto& it : price) {
+		if (it.second >= end)
+			continue;
+		res += (D[it.second] - D[end]) * it.first;
+		end = it.second;
+	}
+	cout << res;
+}
