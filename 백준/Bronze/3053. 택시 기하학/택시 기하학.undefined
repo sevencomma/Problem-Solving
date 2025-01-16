@@ -1,0 +1,11 @@
+#define _USE_MATH_DEFINES
+#include <bits/stdc++.h>
+using namespace std;
+
+double r;
+
+int main(void) {
+	cin >> r;
+	printf("%.6f\n", pow(r, 2) * M_PI);
+	printf("%.6f",2 * pow(r, 2));
+}
