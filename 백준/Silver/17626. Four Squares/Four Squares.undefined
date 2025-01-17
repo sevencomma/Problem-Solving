@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int square[225], N, res;
+
+int main(void) {
+	cin >> N;
+	int sqrtN = sqrt(N);
+	for (int i = 1; i <= sqrtN; i++)
+		square[i] = i * i;
+
+	for (int i = 1; i <= sqrtN; i++)
+		if (square[i] == N) {
+			cout << 1;
+			return 0;
+		}
+
+	for (int i = 1; i <= sqrtN; i++)
+		for (int j = i; j <= sqrtN; j++)
+			if (square[i] + square[j] == N) {
+				cout << 2;
+				return 0;
+			}
+
+	for (int i = 1; i <= sqrtN; i++)
+		for (int j = i; j <= sqrtN; j++)
+			for (int k = j; k <= sqrtN; k++)
+				if (square[i] + square[j] + square[k] == N) {
+					cout << 3;
+					return 0;
+				}
+	cout << 4;
+}
