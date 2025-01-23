@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int psum[10001];
+int seq[10000];
+int N, M, res;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+		cin >> seq[i];
+	psum[0] = 0;
+	for (int i = 0; i < N; i++)
+		psum[i + 1] = psum[i] + seq[i];
+
+	int i = 0, j = 1, cur;
+	while (i < N || j <= N) {
+		cur = psum[j] - psum[i];
+		if (cur > M)
+			i++;
+		else if (cur < M)
+			j++;
+		else {
+			res++;
+			i++;
+			j++;
+		}
+	}
+	cout << res;
+}
