@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> pre;
+vector<int> in;
+int x;
+
+void post(int i, int j, int n) {
+	int root = pre[i];
+	int pos = j;
+	for (; pos < j + n; pos++)
+		if (in[pos] == root)
+			break;
+	int a = pos - j, b = n - a - 1;
+
+	if (a > 0)
+		post(i + 1, j, a);
+	if (b > 0)
+		post(i + 1 + a, pos + 1, b);
+	cout << root << '\n';
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	while (1) {
+		cin >> x;
+		if (cin.eof())
+			break;
+		pre.push_back(x);
+		in.push_back(x);
+	}
+	sort(in.begin(), in.end());
+	post(0, 0, pre.size());
+}
