@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M;
+int board[1000][1000];
+int dp[1000][1000];
+
+int func(int row, int col) {
+	if (row < 0 || col < 0)
+		return 0;
+
+	int& ret = dp[row][col];
+	if (ret != -1)
+		return ret;
+
+	ret = board[row][col];
+	ret += max(func(row - 1, col - 1), max(func(row - 1, col), func(row, col - 1)));
+
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> board[i][j];
+	memset(dp, -1, sizeof(dp));
+	cout << func(N - 1, M - 1);
+}
