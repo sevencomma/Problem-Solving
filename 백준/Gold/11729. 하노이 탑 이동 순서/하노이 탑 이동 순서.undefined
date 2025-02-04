@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+vector<pair<int, int>> ret;
+
+int solve(int n, int a, int b, int c) {
+	int cnt = 0;
+	if (n == 1) {
+		ret.push_back({ a, c });
+		return 1;
+	}
+	cnt += solve(n - 1, a, c, b);
+	cnt += solve(1, a, b, c);
+	cnt += solve(n - 1, b, a, c);
+	return cnt;
+}
+
+int main(void) {
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	cout << solve(N, 1, 2, 3) << '\n';
+	for (auto& it : ret)
+		cout << it.first << ' ' << it.second << '\n';
+}
