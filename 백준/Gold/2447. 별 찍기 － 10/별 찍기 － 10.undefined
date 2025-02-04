@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+vector<string> res;
+
+void solve(int n, int row, int col) {
+	if (n == 1) {
+		res[row][col] = '*';
+	}
+	else {
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++) {
+				if (i == 1 && j == 1)
+					continue;
+				solve(n / 3, row + n / 3 * i, col + n / 3 * j);
+			}
+	}
+}
+
+int main(void) {
+	cin >> N;
+	res = vector<string>(N, string(N, ' '));
+	solve(N, 0, 0);
+
+	for (int i = 0; i < N; i++)
+		cout << res[i] << '\n';
+}
