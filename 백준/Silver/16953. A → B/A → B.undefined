@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+
+int bfs(int a, int b) {
+	queue<pair<ll, int>> q;
+	q.push({ a, 1 });
+
+	while (!q.empty()) {
+		ll val; int cnt;
+		tie(val, cnt) = q.front();
+		q.pop();
+
+		if (val == b)
+			return cnt;
+		if (val > b)
+			continue;
+
+		q.push({ val * 2, cnt + 1 });
+		q.push({ val * 10 + 1, cnt + 1 });
+	}
+	return -1;
+}
+
+int main(void) {
+	int a, b;
+	cin >> a >> b;
+	cout << bfs(a, b);
+}
