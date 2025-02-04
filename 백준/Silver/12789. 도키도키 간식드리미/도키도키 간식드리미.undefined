@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+stack<int> s;
+queue<int> q;
+int N, x, y, turn = 1;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> x;
+		q.push(x);
+	}
+	s.push(INT_MAX);
+
+	while (!q.empty() || !s.empty()) {
+		if (s.top() == turn) {
+			s.pop();
+			turn++;
+		}
+		else if (q.empty())
+			break;
+		else if (q.front() == turn) {
+			q.pop();
+			turn++;
+		}
+		else {
+			x = q.front();
+			q.pop();
+			if (s.top() < x)
+				break;
+			s.push(x);
+		}
+	}
+	if (turn == N + 1)
+		cout << "Nice";
+	else
+		cout << "Sad";
+}
