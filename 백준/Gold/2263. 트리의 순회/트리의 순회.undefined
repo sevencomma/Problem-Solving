@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> in;
+vector<int> post;
+int N;
+
+void pre(int i, int j, int n) {
+	int root = post[i + n - 1];
+	int pos = j;
+	for (; pos < j + n; pos++)
+		if (in[pos] == root)
+			break;
+	int a = pos - j, b = n - a - 1;
+
+	cout << root << ' ';
+	if (a > 0)
+		pre(i, j, a);
+	if (b > 0)
+		pre(i + a, pos + 1, b);
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	in.resize(N);
+	post.resize(N);
+	for (int i = 0; i < N; i++)
+		cin >> in[i];
+	for (int i = 0; i < N; i++)
+		cin >> post[i];
+	pre(0, 0, post.size());
+}
