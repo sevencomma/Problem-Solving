@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+int parent[1000001];
+int minCnt[1000001];
+
+void bfs() {
+	queue<pair<int, int>> q;
+	memset(minCnt, -1, sizeof(minCnt));
+	q.push({ 1, 0 });
+	minCnt[1] = 0;
+	parent[1] = 1;
+
+	while (!q.empty()) {
+		int val, cnt;
+		tie(val, cnt) = q.front();
+		q.pop();
+
+		if (val == N)
+			return;
+
+		for (auto& it : { val * 3, val * 2, val + 1 }) {
+			if (it > N)
+				continue;
+			if (minCnt[it] == -1) {
+				minCnt[it] = cnt + 1;
+				parent[it] = val;
+				q.push({ it, cnt + 1 });
+			}
+		}
+	}
+}
+
+int main(void) {
+	cin >> N;
+	bfs();
+	cout << minCnt[N] << '\n';
+	while (N != 1) {
+		cout << N << ' ';
+		N = parent[N];
+	} cout << 1;
+}
