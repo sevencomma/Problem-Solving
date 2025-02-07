@@ -35,12 +35,12 @@ bool bfs(int low, int high) {
 	return false;
 }
 
-int bisearch(int row) {
-	int l = row - 1, r = 201, mid, res = INT_MAX;
+int bisearch(int low) {
+	int l = low - 1, r = 201, mid, res = INT_MAX;
 
 	while (l + 1 < r) {
 		mid = (l + r) / 2;
-		if (bfs(row, mid)) {
+		if (bfs(low, mid)) {
 			r = mid;
 			res = min(res, r);
 		}
