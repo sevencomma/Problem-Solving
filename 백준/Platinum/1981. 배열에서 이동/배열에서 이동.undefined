@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dy[4] = { -1, 0, 1, 0 };
+int dx[4] = { 0, -1, 0, 1 };
+int N;
+int board[100][100];
+bool visited[100][100];
+
+bool bfs(int low, int high) {
+	if (board[0][0] < low || board[0][0] > high)
+		return false;
+	queue<pair<int, int>> q;
+	memset(visited, 0, sizeof(visited));
+	q.push({ 0, 0 });
+	visited[0][0] = 1;
+
+	while (!q.empty()) {
+		int y = q.front().first;
+		int x = q.front().second;
+		q.pop();
+
+		if (y == N - 1 && x == N - 1)
+			return true;
+
+		for (int i = 0; i < 4; i++) {
+			int ny = y + dy[i];
+			int nx = x + dx[i];
+			if (ny < 0 || nx < 0 || ny >= N || nx >= N || visited[ny][nx]) continue;
+			if (board[ny][nx] < low || board[ny][nx] > high) continue;
+			q.push({ ny, nx });
+			visited[ny][nx] = true;
+		}
+	}
+	return false;
+}
+
+int bisearch(int row) {
+	int l = row - 1, r = 201, mid, res = INT_MAX;
+
+	while (l + 1 < r) {
+		mid = (l + r) / 2;
+		if (bfs(row, mid)) {
+			r = mid;
+			res = min(res, r);
+		}
+		else
+			l = mid;
+	}
+	return res;
+}
+
+int solve() {
+	int res = 200;
+	for (int low = 0; low <= 200; low++)
+		res = min(res, bisearch(low) - low);
+	return res;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> board[i][j];
+	cout << solve();
+}
