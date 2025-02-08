@@ -1,0 +1,11 @@
+#include <iostream>
+using namespace std;
+
+char n;
+int main(void) {
+	cin >> n;
+	if (n == 'n' || n == 'N')
+		cout << "Naver D2";
+	else
+		cout << "Naver Whale";
+}
