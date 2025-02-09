@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int n, x;
+int cnt[1001];
+vector<pair<int, int>> res;
+
+int main(void) {
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> x;
+		cnt[x]++;
+	}
+	vector<int> num;
+	for (int i = 0; i <= 1000; i++)
+		if (cnt[i])
+			num.push_back(i);
+
+	int idx = 0;
+	while (idx < num.size()) {
+		if (cnt[num[idx]] == 0) {
+			idx++;
+			continue;
+		}
+		int size = 1, i = idx + 1, a = idx, b = -1, c = -1;
+		while (i < num.size()) {
+			if (cnt[num[i]])
+				size++;
+			if (size == 2 && b == -1)
+				b = i;
+			if (size == 3) {
+				c = i; break;
+			}
+			i++;
+		}
+		if (size == 1) {
+			res.push_back({ num[a], cnt[num[a]] });
+			cnt[num[a]] = 0;
+		}
+		else if (size == 2) {
+			if (num[a] + 1 == num[b]) {
+				res.push_back({ num[b], cnt[num[b]] });
+				res.push_back({ num[a], cnt[num[a]] });
+			}
+			else {
+				res.push_back({ num[a], cnt[num[a]] });
+				res.push_back({ num[b], cnt[num[b]] });
+			}
+			cnt[num[a]] = 0;
+			cnt[num[b]] = 0;
+		}
+		else {
+			res.push_back({ num[a], cnt[num[a]] });
+			if (num[a] + 1 == num[b]) {
+				res.push_back({ num[c], 1 });
+				cnt[num[c]]--;
+			}
+		}
+		idx++;
+	}
+
+	for (int i = 0; i < res.size(); i++)
+		for (int j = 0; j < res[i].second; j++)
+			cout << res[i].first << ' ';
+}
