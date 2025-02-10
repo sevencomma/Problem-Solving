@@ -5,18 +5,31 @@
 using namespace std;
 
 #define MAX_NUM 1000000
-long long sum = 1, N;
-long long dp[MAX_NUM];
+int a[MAX_NUM], x, y;
+long long sum = 0, N;
 
 int main(void) {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	a[1] = 1;
+	x = 1, y = 1;
 	cin >> N;
-	dp[1] = 1;
-
-	int idx = 2;
-	while (sum < N) {
-		dp[idx] = 1 + dp[idx - dp[dp[idx - 1]]];
-		sum += dp[idx];
-		idx++;
+	while (y < MAX_NUM) {
+		if (a[x] == 0)
+			a[x] = a[x - 1] + 1;
+		sum += a[x];
+		if (sum >= N) {
+			cout << x;
+			return 0;
+		}
+		for (int i = y; i < MAX_NUM && i < y + a[x]; i++) {
+			a[i] = x;
+		}
+		y += a[x];
+		x++;
 	}
-	cout << idx - 1;
+	while (sum < N)
+		sum += a[x++];
+	cout << x - 1;
 }
