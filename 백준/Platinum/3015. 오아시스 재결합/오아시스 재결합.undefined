@@ -3,7 +3,7 @@ using namespace std;
 
 int N;
 long long res;
-deque<pair<int, int>> dq;
+stack<pair<int, int>> s;
 vector<int> seq;
 
 int main(void) {
@@ -16,27 +16,27 @@ int main(void) {
 
 	int val, cnt;
 	for (int i = 0; i < N; i++) {
-		while (!dq.empty() && seq[i] > dq.back().first) {
-			tie(val, cnt) = dq.back();
+		while (!s.empty() && seq[i] > s.top().first) {
+			tie(val, cnt) = s.top();
 			res += cnt;
-			dq.pop_back();
+			s.pop();
 		}
-		if (dq.empty()) {
-			dq.push_back({ seq[i], 1 });
+		if (s.empty()) {
+			s.push({ seq[i], 1 });
 			continue;
 		}
 
-		if (seq[i] < dq.back().first) {
+		if (seq[i] < s.top().first) {
 			res++;
-			dq.push_back({ seq[i], 1 });
+			s.push({ seq[i], 1 });
 		}
-		else if (seq[i] == dq.back().first) {
-			tie(val, cnt) = dq.back();
+		else if (seq[i] == s.top().first) {
+			tie(val, cnt) = s.top();
 			res += cnt;
-			dq.pop_back();
-			if (!dq.empty())
+			s.pop();
+			if (!s.empty())
 				res++;
-			dq.push_back({ val, cnt + 1 });
+			s.push({ val, cnt + 1 });
 		}
 	}
 	cout << res;
