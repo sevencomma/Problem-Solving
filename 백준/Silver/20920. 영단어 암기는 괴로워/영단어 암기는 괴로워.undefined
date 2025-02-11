@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+int N, M;
+string s;
+unordered_map<string, int> cnt;
+vector<string> wordList;
+
+bool compare(string a, string b) {
+	if (cnt[a] != cnt[b])
+		return cnt[a] > cnt[b];
+	if (a.length() != b.length())
+		return a.length() > b.length();
+	return a < b;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < N; i++) {
+		cin >> s;
+		if (s.length() < M)
+			continue;
+		cnt[s]++;
+	}
+	for (auto& it : cnt)
+		wordList.push_back(it.first);
+	sort(wordList.begin(), wordList.end(), compare);
+	for (auto& it : wordList)
+		cout << it << '\n';
+}
