@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+int N, check = 1, res;
+const string dance = "ChongChong";
+unordered_map<string, int> numb;
+string s1, s2;
+int Parent[2001];
+int Rank[2001];
+
+int getNum(string s) {
+	return numb[s];
+}
+
+void Link(int x, int y) {
+	if (Rank[x] > Rank[y])
+		Parent[y] = x;
+	else {
+		Parent[x] = y;
+		if (Rank[x] == Rank[y])
+			Rank[y]++;
+	}
+}
+
+int Find(int x) {
+	if (Parent[x] != x)
+		Parent[x] = Find(Parent[x]);
+	return Parent[x];
+}
+
+void Union(int x, int y) {
+	Link(Find(x), Find(y));
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < 2001; i++)
+		Parent[i] = i;
+	numb[dance] = check++;
+
+	for (int i = 0; i < N; i++) {
+		cin >> s1 >> s2;
+		if (!numb[s1])
+			numb[s1] = check++;
+		if (!numb[s2])
+			numb[s2] = check++;
+
+		if (Find(getNum(s1)) == Find(getNum(dance)) || Find(getNum(s2)) == Find(getNum(dance)))
+			Union(getNum(s1), getNum(s2));
+	}
+	for (int i = 0; i < check; i++)
+		if (Find(i) == Find(getNum(dance)))
+			res++;
+	cout << res;
+}
