@@ -1,0 +1,88 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct point {
+	int y, x, cnt;
+};
+
+int dy[4] = { -1, 0, 1, 0 };
+int dx[4] = { 0, -1, 0, 1 };
+int N, sy, sx, sharkSize = 2;
+int board[20][20];
+bool visited[20][20];
+
+bool compare(point& a, point& b) {
+	if (a.y == b.y)
+		return a.x < b.x;
+	return a.y < b.y;
+}
+
+point bfs_findTarget(int y, int x) {
+	memset(visited, 0, sizeof(visited));
+	queue<point> q;
+	q.push({ y, x, 0 });
+	visited[y][x] = true;
+
+	int ansCnt = -1;
+	vector<point> list;
+
+	while (!q.empty()) {
+		point cur = q.front();
+		q.pop();
+
+		if (ansCnt != -1 && cur.cnt > ansCnt)
+			break;
+		if (board[cur.y][cur.x] > 0 && board[cur.y][cur.x] < sharkSize) {
+			ansCnt = cur.cnt;
+			list.push_back(cur);
+			continue;
+		}
+
+		for (int i = 0; i < 4; i++) {
+			int ny = cur.y + dy[i];
+			int nx = cur.x + dx[i];
+
+			if (ny < 0 || nx < 0 || ny >= N || nx >= N || visited[ny][nx] || board[ny][nx] > sharkSize)
+				continue;
+			q.push({ ny, nx, cur.cnt + 1 });
+			visited[ny][nx] = true;
+		}
+	}
+	if (ansCnt == -1)
+		return { -1, -1, -1 };
+	sort(list.begin(), list.end(), compare);
+	return list[0];
+}
+
+int solve(int sy, int sx) {
+	board[sy][sx] = 0;
+	int res = 0;
+	int yummy = 0;
+	point cur = bfs_findTarget(sy, sx);
+	
+	while (cur.x != -1) {
+		res += cur.cnt;
+		yummy++;
+		board[cur.y][cur.x] = 0;
+
+		if (yummy == sharkSize) {
+			sharkSize++;
+			yummy = 0;
+		}
+		cur = bfs_findTarget(cur.y, cur.x);
+	}
+	return res;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++) {
+			cin >> board[i][j];
+			if (board[i][j] == 9)
+				sy = i, sx = j;
+		}
+	cout << solve(sy, sx);
+}
