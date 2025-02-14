@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define vvi vector<vector<int>>
+#define vi vector<int>
+int N;
+const int MOD = 1000;
+
+vvi get_identityMatrix() {
+	vvi X(N, vi(N));
+	for (int i = 0; i < N; i++)
+		X[i][i] = 1;
+	return X;
+}
+
+vvi squareMatrix(vvi a, vvi b) {
+	vvi x(N, vi(N, 0));
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			for (int k = 0; k < N; k++)
+				x[i][j] = (x[i][j] + a[i][k] * b[k][j]) % MOD;
+	return x;
+}
+
+vvi solve(vvi& a, long long b) {
+	if (b == 0)
+		return get_identityMatrix();
+	vvi temp = solve(a, b / 2);
+	vvi x = squareMatrix(temp, temp);
+	if (b % 2)
+		return squareMatrix(x, a);
+	return x;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	long long B;
+	cin >> N >> B;
+	vvi A(N, vi(N));
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> A[i][j];
+
+	vvi X = solve(A, B);
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++)
+			cout << X[i][j] << ' ';
+		cout << '\n';
+	}
+}
