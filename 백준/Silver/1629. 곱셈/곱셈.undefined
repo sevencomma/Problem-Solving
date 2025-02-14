@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+int a, b, c;
+int MOD;
+
+ll square(ll x) {
+	return (x * x) % MOD;
+}
+
+ll solve(int a, int b) {
+	if (b == 0)
+		return 1;
+	ll x = square(solve(a, b / 2));
+	if (b % 2)
+		return (x * a) % MOD;
+	return x;
+}
+
+int main(void) {
+	cin >> a >> b >> c;
+	MOD = c;
+	cout << solve(a, b);
+}
