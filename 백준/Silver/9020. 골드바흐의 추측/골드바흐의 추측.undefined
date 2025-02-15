@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int t, n;
+bool isPrime[10001];
+
+void solve(int n) {
+	if (n == 4) {
+		cout << "2 2\n";
+		return;
+	}
+
+	int idx = n / 2, vs;
+	if (idx % 2 == 0)
+		idx--;
+	while (1) {
+		vs = n - idx;
+		if (!isPrime[idx] || !isPrime[vs]) {
+			idx -= 2;
+			continue;
+		}
+		cout << idx << ' ' << vs << '\n';
+		return;
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> t;
+
+	memset(isPrime, 1, sizeof(isPrime));
+	isPrime[0] = isPrime[1] = false;
+	for (int i = 2; i * i <= 10000; i++)
+		if (isPrime[i])
+			for (int j = i * i; j <= 10000; j += i)
+				isPrime[j] = false;
+
+	while (t--) {
+		cin >> n;
+		solve(n);
+	}
+}
