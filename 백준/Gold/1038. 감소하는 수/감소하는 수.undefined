@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<long long> x;
+
+void makeX(long long val) {
+	x.push_back(val);
+	int last = val % 10;
+	if (last == 0)
+		return;
+
+	for (int i = last - 1; i >= 0; i--) {
+		long long next = val * 10 + i;
+		makeX(next);
+	}
+}
+
+int main(void) {
+	int n;
+	cin >> n;
+	for (int i = 0; i < 10; i++)
+		makeX(i);
+	sort(x.begin(), x.end());
+	cout << (n >= x.size() ? -1 : x[n]);
+}
