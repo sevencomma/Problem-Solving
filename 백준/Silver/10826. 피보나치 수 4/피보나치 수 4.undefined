@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string fibo[10001];
+int n;
+// 0 1 1 2 3   5 8 13 21 34
+string sum(string& a, string& b) {
+	vector<int> c(max(a.size(), b.size()) + 1, 0);
+	int n = a.size(), m = b.size();
+
+	for (int i = 0; i < a.size(); i++)
+		c[i] += a[i] - '0';
+	for (int j = 0; j < b.size(); j++)
+		c[j] += b[j] - '0';
+	for (int k = 0; k < c.size() - 1; k++)
+		if (c[k] >= 10) {
+			c[k + 1]++;
+			c[k] -= 10;
+		}
+	string res = "";
+	for (int i = 0; i < c.size() - 1; i++)
+		res += to_string(c[i]);
+	if (c[c.size() - 1] != 0)
+		res += to_string(c[c.size() - 1]);
+	return res;
+}
+
+int main(void) {
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> n;
+	fibo[0] = "0";
+	fibo[1] = "1";
+	for (int i = 2; i <= n; i++)
+		fibo[i] = sum(fibo[i - 1], fibo[i - 2]);
+	for (int i = fibo[n].length() - 1; i >= 0; i--)
+		cout << fibo[n][i];
+}
