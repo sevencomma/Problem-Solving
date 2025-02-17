@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define vi vector<int>
+#define vvi vector<vector<int>>
+typedef long long ll;
+const int MOD = 1000000;
+vvi squareBase, fiboBase;
+
+vvi multiplyMatrix(vvi a, vvi b) {
+	int rowA = a.size(), colA = a[0].size();
+	int rowB = b.size(), colB = b[0].size();
+	if (colA != rowB)
+		return {};
+
+	vvi x(rowA, vi(colB, 0));
+	
+	for (int k = 0; k < colA; k++)
+		for (int i = 0; i < rowA; i++)
+			for (int j = 0; j < colB; j++)
+				x[i][j] = (x[i][j] + (ll)a[i][k] * b[k][j]) % MOD;
+
+	return x;
+}
+
+vvi getMatrixSquare(ll n) {
+	if (n == 1)
+		return squareBase;
+	if (n % 2)
+		return multiplyMatrix(getMatrixSquare(n - 1), squareBase);
+	vvi x = getMatrixSquare(n / 2);
+	return multiplyMatrix(x, x);
+}
+
+int fibo(long long n) {
+	if (n == 0)
+		return 0;
+	if (n == 1 || n == 2)
+		return 1;
+	vvi t = getMatrixSquare(n - 1);
+	vvi x = multiplyMatrix(t, fiboBase);
+	return x[0][0];
+}
+
+int main(void) {
+	ll n;
+	cin >> n;
+	squareBase = vvi(2, vi(2, 0));
+	squareBase[0][0] = squareBase[0][1] = squareBase[1][0] = 1;
+	fiboBase = vvi(2, vi(1, 0));
+	fiboBase[0][0] = 1;
+	cout << fibo(n);
+}
