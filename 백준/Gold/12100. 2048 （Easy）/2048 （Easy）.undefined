@@ -1,0 +1,96 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// <dir> 0 : up, 1 : left, 2 : down, 3 : right
+int dy[4] = { -1, 0, 1, 0 };
+int dx[4] = { 0, -1, 0, 1 };
+int N, res;
+int board[20][20];
+bool changed[20][20];
+
+bool is_in_range(int y, int x) {
+	return y >= 0 && y < N && x >= 0 && x < N;
+}
+
+void move_block(int i, int j, int dir) {
+	if (board[i][j] == 0)
+		return;
+	int cur, ny, nx;
+	cur = board[i][j];
+	board[i][j] = 0;
+	ny = i + dy[dir], nx = j + dx[dir];
+	while (is_in_range(ny, nx) && board[ny][nx] == 0)
+		ny += dy[dir], nx += dx[dir];
+	if (!is_in_range(ny, nx)) {
+		board[ny - dy[dir]][nx - dx[dir]] = cur;
+		return;
+	}
+	if (board[ny][nx] == cur && !changed[ny][nx]) {
+		board[ny][nx] *= 2;
+		changed[ny][nx] = true;
+	}
+	else {
+		board[ny - dy[dir]][nx - dx[dir]] = cur;
+	}
+}
+
+void simulation(int dir) { // <dir> 0 : up, 1 : left, 2 : down, 3 : right
+	memset(changed, false, sizeof(changed));
+	if (dir == 0)
+		for (int i = 1; i < N; i++)
+			for (int j = 0; j < N; j++)
+				move_block(i, j, dir);
+	else if (dir == 1)
+		for (int j = 1; j < N; j++)
+			for (int i = 0; i < N; i++)
+				move_block(i, j, dir);
+	else if (dir == 2)
+		for (int i = N - 2; i >= 0; i--)
+			for (int j = 0; j < N; j++)
+				move_block(i, j, dir);
+	else
+		for (int j = N - 2; j >= 0; j--)
+			for (int i = 0; i < N; i++)
+				move_block(i, j, dir);
+}
+
+int find_max() {
+	int M = 0;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			M = max(M, board[i][j]);
+	return M;
+}
+
+void solve(int cnt) {
+	if (cnt == 5) {
+		res = max(res, find_max());
+		return;
+	}
+	int save[20][20];
+	for (int dir = 0; dir < 4; dir++) {
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				save[i][j] = board[i][j];
+		simulation(dir);
+		solve(cnt + 1);
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				board[i][j] = save[i][j];
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> board[i][j];
+	if (N == 1) {
+		cout << board[0][0];
+		return 0;
+	}
+	solve(0);
+	cout << res;
+}
