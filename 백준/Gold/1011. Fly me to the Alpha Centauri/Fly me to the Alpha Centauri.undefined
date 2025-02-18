@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int t, x, y;
+
+int solve(int d) {
+	return 2 * ceil(sqrt(d + 0.25f) - 0.5f);
+}
+
+int solve2(int d) {
+	return 2 * ceil(sqrt(d)) - 1;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> t;
+	while (t--) {
+		cin >> x >> y;
+		cout << min(solve(y - x), solve2(y - x)) << '\n';
+	}
+}
