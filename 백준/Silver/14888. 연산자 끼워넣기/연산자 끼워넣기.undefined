@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M = INT_MIN, m = INT_MAX;
+vector<int> num;
+vector<int> op(4);
+
+int calc(int x, int y, int mode) {
+	switch (mode) {
+	case 0: return x + y;
+	case 1: return x - y;
+	case 2: return x * y;
+	case 3: return x / y;
+	}
+	return -1;
+}
+
+void solve(int x, int idx) {
+	if (idx == N) {
+		M = max(M, x);
+		m = min(m, x);
+		return;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		if (op[i] == 0)
+			continue;
+		int next = calc(x, num[idx], i);
+		op[i]--;
+		solve(next, idx + 1);
+		op[i]++;
+	}
+}
+
+int main(void) {
+	cin >> N;
+	num.resize(N);
+	for (int i = 0; i < N; i++)
+		cin >> num[i];
+	for (int i = 0; i < 4; i++)
+		cin >> op[i];
+	solve(num[0], 1);
+	cout << M << '\n' << m;
+}
