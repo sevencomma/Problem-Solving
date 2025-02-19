@@ -1,0 +1,21 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+
+int t;
+ll a, b;
+
+int main() {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> t;
+	while (t--) {
+		cin >> a >> b;
+		if (a >= b || b % a) {
+			cout << 0 << '\n';
+			continue;
+		}
+		cout << 1 << '\n';
+	}
+}
