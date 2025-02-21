@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+
+const int MOD = 1000000007;
+
+pair<int, pair<int, int>> xGcd(int a, int b) { // {g, {x, y}} ==> ax + by = g
+	if (b == 0)
+		return { a, {1, 0} };
+	auto ret = xGcd(b, a % b);
+	int g, x, y;
+	g = ret.first;
+	tie(x, y) = ret.second;
+	return { g, {y, x - (a / b) * y} };
+}
+
+int mod_reverse(int x, int mod) {
+	auto ret = xGcd(x, mod);
+	if (ret.first > 1) return -1;
+	return (ret.second.first + mod) % mod;
+}
+
+int main(void) {
+	int n, k;
+	cin >> n >> k;
+	ll res;
+	if (k == 0) res = 1;
+	else res = n;
+	for (int i = 2; i <= k; i++) {
+		res = (res * (n - i + 1)) % MOD;
+		res = (res * mod_reverse(i, MOD)) % MOD;
+	}
+	cout << res;
+}
