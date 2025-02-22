@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+ll N, A;
+
+pair<ll, pair<ll, ll>> xGcd(ll a, ll b) {
+	if (b == 0)
+		return { a , {1, 0} };
+	auto ret = xGcd(b, a % b);
+	ll g, x, y;
+	g = ret.first;
+	tie(x, y) = ret.second;
+	return { g, {y, x - (a / b) * y} };
+}
+
+ll mul_inverse(ll a, ll mod) {
+	auto ret = xGcd(a, mod);
+	if (ret.first > 1)
+		return -1;
+	return (ret.second.first + mod) % mod;
+}
+
+int main(void) {
+	cin >> N >> A;
+	cout << N - A << ' ' << mul_inverse(A, N);
+}
