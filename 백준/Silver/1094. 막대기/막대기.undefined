@@ -1,0 +1,8 @@
+#include <bits/stdc++.h>
+using namespace std;
+int x;
+int main(void) {
+	cin >> x;
+	bitset<8> k = x;
+	cout << k.count();
+}
