@@ -1,0 +1,118 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dy[4] = { -1, 0, 1, 0 };
+int dx[4] = { 0, -1, 0, 1 };
+int N, M, LAND = 1;
+int board[10][10];
+bool visited[10][10];
+bool is_in_range(int y, int x) {
+	return y >= 0 && y < N && x >= 0 && x < M;
+}
+
+void bfs(int y, int x) {
+	if (visited[y][x] || !board[y][x]) return;
+	LAND++;
+	queue<pair<int, int>> q;
+	q.push({ y, x });
+	visited[y][x] = true;
+
+	while (!q.empty()) {
+		int cy, cx;
+		tie(cy, cx) = q.front();
+		q.pop();
+		board[cy][cx] = LAND;
+
+		for (int i = 0; i < 4; i++) {
+			int ny = cy + dy[i];
+			int nx = cx + dx[i];
+			if (!is_in_range(ny, nx) || visited[ny][nx] || !board[ny][nx]) continue;
+			q.push({ ny, nx });
+			visited[ny][nx] = true;
+		}
+	}
+}
+
+struct edge {
+	int node1, node2, weight;
+};
+
+struct cmp {
+	bool operator() (edge a, edge b) const {
+		return a.weight > b.weight;
+	}
+};
+
+priority_queue<edge, vector<edge>, cmp> pq;
+int Parent[10];
+int Rank[10];
+
+void Link(int x, int y) {
+	if (Rank[x] > Rank[y])
+		Parent[y] = x;
+	else {
+		Parent[x] = y;
+		if (Rank[x] == Rank[y])
+			Rank[y]++;
+	}
+}
+
+int Find(int x) {
+	if (Parent[x] != x)
+		Parent[x] = Find(Parent[x]);
+	return Parent[x];
+}
+
+void Union(int x, int y) {
+	Link(Find(x), Find(y));
+}
+
+void getDistance(int y, int x) {
+	if (!board[y][x]) return;
+	int cur = board[y][x];
+
+	for (int i = 0; i < 2; i++) {
+		int ny = y + dy[i], nx = x + dx[i], cnt = 0;
+
+		while (is_in_range(ny, nx)) {
+			if (board[ny][nx] != 0 && board[ny][nx] != cur && cnt > 1)
+				pq.push({ cur, board[ny][nx], cnt });
+			if (board[ny][nx]) break;
+			ny += dy[i], nx += dx[i], cnt++;
+		}
+	}
+}
+
+int Kruskal() {
+	int res = 0;
+	for (int i = 0; i < 10; i++)
+		Parent[i] = i;
+	while (!pq.empty()) {
+		edge cur = pq.top();
+		pq.pop();
+		if (Find(cur.node1) == Find(cur.node2))
+			continue;
+		Union(cur.node1, cur.node2);
+		res += cur.weight;
+	}
+	for (int i = 2; i <= LAND; i++)
+		if (Find(2) != Find(i))
+			res = -1;
+	return res;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> board[i][j];
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			bfs(i, j);
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			getDistance(i, j);
+	cout << Kruskal();
+}
