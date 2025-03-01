@@ -1,0 +1,120 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// <dir> 0 : up, 1 : left, 2 : down, 3 : right
+int N, res;
+int board[20][20];
+
+int simulation(int dir) { // <dir> 0 : up, 1 : left, 2 : down, 3 : right
+	int maxV = 0;
+	queue<int> q;
+	if (dir == 0)
+		for (int j = 0; j < N; j++) {
+			for (int i = 0; i < N; i++)
+				if (board[i][j]) {
+					q.push(board[i][j]); board[i][j] = 0;
+				}
+			int idx = 0, a;
+			while (!q.empty()) {
+				a = q.front(); q.pop();
+				maxV = max(maxV, a);
+				if (!board[idx][j]) board[idx][j] = a;
+				else if (board[idx][j] == a) board[idx++][j] += a, maxV = max(maxV, a * 2);
+				else board[++idx][j] = a;
+			}
+		}
+	else if (dir == 1)
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++)
+				if (board[i][j]) {
+					q.push(board[i][j]); board[i][j] = 0;
+				}
+			int idx = 0, a;
+			while (!q.empty()) {
+				a = q.front(); q.pop();
+				maxV = max(maxV, a);
+				if (!board[i][idx]) board[i][idx] = a;
+				else if (board[i][idx] == a) board[i][idx++] += a, maxV = max(maxV, a * 2);
+				else board[i][++idx] = a;
+			}
+		}
+	else if (dir == 2)
+		for (int j = 0; j < N; j++) {
+			for (int i = N - 1; i >= 0; i--)
+				if (board[i][j]) {
+					q.push(board[i][j]); board[i][j] = 0;
+				}
+			int idx = N - 1, a;
+			while (!q.empty()) {
+				a = q.front(); q.pop();
+				maxV = max(maxV, a);
+				if (!board[idx][j]) board[idx][j] = a;
+				else if (board[idx][j] == a) board[idx--][j] += a, maxV = max(maxV, a * 2);
+				else board[--idx][j] = a;
+			}
+		}
+	else
+		for (int i = 0; i < N; i++) {
+			for (int j = N - 1; j >= 0; j--)
+				if (board[i][j]) {
+					q.push(board[i][j]); board[i][j] = 0;
+				}
+			int idx = N - 1, a;
+			while (!q.empty()) {
+				a = q.front(); q.pop();
+				maxV = max(maxV, a);
+				if (!board[i][idx]) board[i][idx] = a;
+				else if (board[i][idx] == a) board[i][idx--] += a, maxV = max(maxV, a * 2);
+				else board[i][--idx] = a;
+			}
+		}
+	return maxV;
+}
+
+bool isChanged(int a[][20], int b[][20]) {
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			if (a[i][j] != b[i][j])
+				return true;
+	return false;
+}
+
+void solve(int cnt, int maxVal) {
+	res = max(res, maxVal);
+	if (pow(2, 10 - cnt) * maxVal <= res) return;
+
+	int save[20][20];
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			save[i][j] = board[i][j];
+
+	bool changeCheck; int x;
+	for (int dir = 0; dir < 4; dir++) {
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				board[i][j] = save[i][j];
+
+		x = simulation(dir);
+		changeCheck = isChanged(save, board);
+		if (!changeCheck) continue;
+		solve(cnt + 1, x);
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	int maxV = 0;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++) {
+			cin >> board[i][j];
+			maxV = max(maxV, board[i][j]);
+		}
+	if (N == 1) {
+		cout << board[0][0];
+		return 0;
+	}
+	solve(0, maxV);
+	cout << res;
+}
