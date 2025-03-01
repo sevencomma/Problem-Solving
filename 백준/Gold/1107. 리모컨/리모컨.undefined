@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, m, x, isLocked[10];
+bool visited[1000000];
+
+void brute(int cur, int cnt, int& res) {
+	if (cur >= pow(10, 6) || visited[cur] || cnt >= res) return;
+	visited[cur] = true;
+	res = min(res, cnt + abs(N - cur));
+	for (int i = 0; i < 10; i++) {
+		if (isLocked[i]) continue;
+		int next = cur * 10 + i;
+		brute(next, cnt + 1, res);
+	}
+}
+
+int solve(int target) {
+	int res = abs(target - 100);
+	for (int i = 9; i >= 0; i--)
+		if (!isLocked[i])
+			brute(i, 1, res);
+	return res;
+}
+
+int main(void) {
+	cin >> N >> m;
+	for (int i = 0; i < m; i++) {
+		cin >> x;
+		isLocked[x] = true;
+	}
+	cout << solve(N);
+}
