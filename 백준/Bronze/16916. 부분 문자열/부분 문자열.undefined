@@ -1,0 +1,14 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s, p;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> s >> p;
+	if (strstr((char*)s.c_str(), (char*)p.c_str()) == NULL)
+		cout << 0;
+	else
+		cout << 1;
+}
