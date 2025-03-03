@@ -1,0 +1,19 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, res;
+
+int main(void) {
+	cin >> N;
+	vector<int> seq(N);
+	for (int i = 0; i < N; i++)
+		cin >> seq[i];
+	sort(seq.begin(), seq.end());
+	do {
+		int k = 0;
+		for (int i = 0; i < N - 1; i++)
+			k += abs(seq[i] - seq[i + 1]);
+		res = max(res, k);
+	} while (next_permutation(seq.begin(), seq.end()));
+	cout << res;
+}
