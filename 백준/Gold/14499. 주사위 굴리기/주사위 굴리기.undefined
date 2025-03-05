@@ -1,0 +1,86 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct dice {	// 위에서 봤을때 기준
+	int top, bottom, up, down, right, left;
+};
+
+int dy[4] = { 0, 0, -1, 1 };	// 동서북남
+int dx[4] = { 1, -1, 0, 0 };
+int N, M, x, y, K;	// y, x are changing
+int board[20][20];
+struct dice A;		// A is changing
+
+void cmd(int dir) {
+	int ny = y + dy[dir - 1];
+	int nx = x + dx[dir - 1];
+	if (ny < 0 || nx < 0 || ny >= N || nx >= M)
+		return;
+	struct dice temp;
+
+	switch (dir) {
+	case 1: {	// 동
+		temp.up = A.up;
+		temp.down = A.down;
+		temp.right = A.top;
+		temp.bottom = A.right;
+		temp.left = A.bottom;
+		temp.top = A.left;
+		A = temp;
+		break;
+	}
+	case 2: {	// 서
+		temp.up = A.up;
+		temp.down = A.down;
+		temp.right = A.bottom;
+		temp.bottom = A.left;
+		temp.left = A.top;
+		temp.top = A.right;
+		A = temp;
+		break;
+	}
+	case 3: {	// 북
+		temp.up = A.top;
+		temp.down = A.bottom;
+		temp.right = A.right;
+		temp.bottom = A.up;
+		temp.left = A.left;
+		temp.top = A.down;
+		A = temp;
+		break;
+	}
+	case 4: {	// 남
+		temp.up = A.bottom;
+		temp.down = A.top;
+		temp.right = A.right;
+		temp.bottom = A.down;
+		temp.left = A.left;
+		temp.top = A.up;
+		A = temp;
+		break;
+	}
+	}
+	if (board[ny][nx] == 0)
+		board[ny][nx] = A.bottom;
+	else {
+		A.bottom = board[ny][nx];
+		board[ny][nx] = 0;
+	}
+	cout << A.top << '\n';
+	y = ny;
+	x = nx;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M >> y >> x >> K;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> board[i][j];
+	vector<int> dir(K);
+	for (int i = 0; i < K; i++)
+		cin >> dir[i];
+	for (auto& it : dir)
+		cmd(it);
+}
