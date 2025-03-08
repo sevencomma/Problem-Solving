@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 123456789;
+int N, res = INF;
+int cache[1000][3][3]; // '[3]' : 1's color (r, g, b)
+int cost[1000][3];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < 3; j++)
+			cin >> cost[i][j];
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
+			cache[0][i][j] = INF;
+	for (int i = 0; i < 3; i++)
+		cache[0][i][i] = cost[0][i];
+
+	for (int k = 0; k < 3; k++)
+		for (int i = 1; i < N ; i++)
+			for (int j = 0; j < 3; j++) {
+				if (i == N - 1 && k == j)
+					cache[i][j][k] = INF;
+				else
+				cache[i][j][k] = min(cache[i - 1][(j + 1) % 3][k], cache[i - 1][(j + 2) % 3][k]) + cost[i][j];
+			}
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
+			res = min(res, cache[N - 1][i][j]);
+	cout << res;
+}
