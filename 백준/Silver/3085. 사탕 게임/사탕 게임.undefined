@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dy[2] = { 1, 0 };
+int dx[2] = { 0, 1 };
+int N;
+char board[50][50];
+
+void swap(int cy, int cx, int ny, int nx) {
+	char temp = board[cy][cx];
+	board[cy][cx] = board[ny][nx];
+	board[ny][nx] = temp;
+}
+
+int Find() {
+	int len, res = 0;
+	for (int i = 0; i < N; i++) {
+		len = 1;
+		for (int j = 1; j < N; j++) {
+			if (board[i][j] == board[i][j - 1])
+				len++;
+			else
+				len = 1;
+			res = max(res, len);
+		}
+	}
+	for (int j = 0; j < N; j++) {
+		len = 1;
+		for (int i = 1; i < N; i++) {
+			if (board[i][j] == board[i - 1][j])
+				len++;
+			else
+				len = 1;
+			res = max(res, len);
+		}
+	}
+	return res;
+}
+
+int solve() {
+	int res = 0;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			for (int k = 0; k < 2; k++) {
+				int ny = i + dy[k];
+				int nx = j + dx[k];
+				if (ny >= 0 && nx >= 0 && ny < N && nx < N && board[i][j] != board[ny][nx]) {
+					swap(i, j, ny, nx);
+					res = max(res, Find());
+					swap(i, j, ny, nx);
+				}
+			}
+	return res;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> board[i][j];
+	cout << solve();
+}
