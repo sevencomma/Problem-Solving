@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int LEN = 8;
+int top[4];
+string state[4];
+int K;
+
+char getLeft(int i, int top) {
+	return state[i][(top + 6) % LEN];
+}
+
+char getRight(int i, int top) {
+	return state[i][(top + 2) % LEN];
+}
+
+bool is_in_range(int i) {
+	return i >= 0 && i < 4;
+}
+
+void rotate(int i, int dir) {
+	int rotateDir[4] = { 0, };
+	rotateDir[i] = dir;
+
+	int l = i - 1, r = i + 1;
+	while (1) {
+		if (!is_in_range(l)) break;
+		if (getRight(l, top[l]) == getLeft(l + 1, top[l + 1])) break;
+		rotateDir[l] = -rotateDir[l + 1];
+		l--;
+	}
+	while (1) {
+		if (!is_in_range(r)) break;
+		if (getRight(r - 1, top[r - 1]) == getLeft(r, top[r])) break;
+		rotateDir[r] = -rotateDir[r - 1];
+		r++;
+	}
+	for (int i = 0; i < 4; i++) {
+		if (rotateDir[i] == 1)
+			top[i] = (top[i] + 7) % LEN;
+		else if (rotateDir[i] == -1)
+			top[i] = (top[i] + 1) % LEN;
+	}
+}
+
+int getScore() {
+	int res = 0;
+	for (int i = 0; i < 4; i++)
+		if (state[i][top[i]] == '1')
+			res += pow(2, i);
+	return res;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	for (int i = 0; i < 4; i++)
+		cin >> state[i];
+	cin >> K;
+	vector<pair<int, int>> cmd(K);
+	for (int i = 0; i < K; i++)
+		cin >> cmd[i].first >> cmd[i].second;
+	for (auto& it : cmd)
+		rotate(it.first - 1, it.second);
+	cout << getScore();
+}
