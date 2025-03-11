@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, R;
+int board[300][300];
+int temp[300][300];
+
+void rotate() {
+	memset(temp, 0, sizeof(temp));
+	int rowL, rowR, colL, colR;
+	rowL = colL = 0;
+	rowR = N - 1; colR = M - 1;
+
+	while (rowL <= rowR && colL <= colR) {
+		int i = rowL, j = colL;
+		
+		while (i < rowR) {
+			temp[i + 1][j] = board[i][j];
+			i++;
+		}
+
+		while (j < colR) {
+			temp[i][j + 1] = board[i][j];
+			j++;
+		}
+
+		while (i > rowL) {
+			temp[i - 1][j] = board[i][j];
+			i--;
+		}
+
+		while (j > colL) {
+			temp[i][j - 1] = board[i][j];
+			j--;
+		}
+		colL++;
+		rowR--;
+		colR--;
+		rowL++;
+	}
+
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			board[i][j] = temp[i][j];
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M >> R;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> board[i][j];
+	for (int i = 0; i < R; i++)
+		rotate();
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++)
+			cout << board[i][j] << ' ';
+		cout << '\n';
+	}
+}
