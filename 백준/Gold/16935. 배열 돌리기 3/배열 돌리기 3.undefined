@@ -1,0 +1,117 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define SWAP(x, y) ((x)^=(y), (y)^=(x), (x)^= (y))
+int N, M, R, q;
+int board[100][100];
+int temp[100][100];
+
+void tempToboard() {
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			board[i][j] = temp[i][j];
+}
+
+void oper1() {
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			temp[i][j] = board[N - 1 - i][j];
+	tempToboard();
+}
+
+void oper2() {
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			temp[i][j] = board[i][M - 1 - j];
+	tempToboard();
+}
+
+void oper3() {
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			temp[j][N - 1 - i] = board[i][j];
+	SWAP(N, M);
+	tempToboard();
+}
+
+void oper4() {
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			temp[M - 1 - j][i] = board[i][j];
+	SWAP(N, M);
+	tempToboard();
+}
+
+void oper5() {
+	int rowL, rowM, rowH, colL, colM, colH;
+	rowL = colL = 0;
+	rowM = N / 2; colM = M / 2;
+	rowH = N; colH = M;
+
+	for (int i = rowL; i < rowM; i++)
+		for (int j = colL; j < colM; j++)
+			temp[i][j + colM] = board[i][j];
+	for (int i = rowL; i < rowM; i++)
+		for (int j = colM; j < colH; j++)
+			temp[i + rowM][j] = board[i][j];
+	for (int i = rowM; i < rowH; i++)
+		for (int j = colM; j < colH; j++)
+			temp[i][j - colM] = board[i][j];
+	for (int i = rowM; i < rowH; i++)
+		for (int j = colL; j < colM; j++)
+			temp[i - rowM][j] = board[i][j];
+
+	tempToboard();
+}
+
+void oper6() {
+	int rowL, rowM, rowH, colL, colM, colH;
+	rowL = colL = 0;
+	rowM = N / 2; colM = M / 2;
+	rowH = N; colH = M;
+
+	for (int i = rowL; i < rowM; i++)
+		for (int j = colL; j < colM; j++)
+			temp[i + rowM][j] = board[i][j];
+	for (int i = rowM; i < rowH; i++)
+		for (int j = colL; j < colM; j++)
+			temp[i][j + colM] = board[i][j];
+	for (int i = rowM; i < rowH; i++)
+		for (int j = colM; j < colH; j++)
+			temp[i - rowM][j] = board[i][j];
+	for (int i = rowL; i < rowM; i++)
+		for (int j = colM; j < colH; j++)
+			temp[i][j - colM] = board[i][j];
+
+	tempToboard();
+}
+
+void cmd(int q) {
+	switch (q) {
+	case 1: oper1(); break;
+	case 2: oper2(); break;
+	case 3: oper3(); break;
+	case 4: oper4(); break;
+	case 5: oper5(); break;
+	case 6: oper6(); break;
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M >> R;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> board[i][j];
+	for (int i = 0; i < R; i++) {
+		cin >> q;
+		cmd(q);
+	}
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++)
+			cout << board[i][j] << ' ';
+		cout << '\n';
+	}
+}
