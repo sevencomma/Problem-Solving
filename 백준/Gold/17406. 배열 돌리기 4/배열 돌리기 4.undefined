@@ -1,0 +1,100 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, K;
+struct cmd {
+	int r, c, s;
+};
+int board[50][50];
+int temp[50][50];
+
+void rotateQuery(int r, int c, int s) {
+	int yL, yH, xL, xH;
+	yL = r - s - 1; yH = r + s - 1;
+	xL = c - s - 1; xH = c + s - 1;
+
+	memset(temp, 0, sizeof(temp));
+
+	while (yL <= yH && xL <= xH) {
+		int i = yL, j = xL;
+
+		while (j < xH) {
+			temp[i][j + 1] = board[i][j];
+			j++;
+		}
+		while (i < yH) {
+			temp[i + 1][j] = board[i][j];
+			i++;
+		}
+		while (j > xL) {
+			temp[i][j - 1] = board[i][j];
+			j--;
+		}
+		while (i > yL) {
+			temp[i - 1][j] = board[i][j];
+			i--;
+		}
+		yL++;
+		xH--;
+		yH--;
+		xL++;
+	}
+	temp[r - 1][c - 1] = board[r - 1][c - 1];
+
+	yL = r - s - 1; yH = r + s - 1;
+	xL = c - s - 1; xH = c + s - 1;
+	for (int i = yL; i <= yH; i++)
+		for (int j = xL; j <= xH; j++)
+			board[i][j] = temp[i][j];
+}
+
+int getScore() {
+	int ret = INT_MAX;
+	for (int i = 0; i < N; i++) {
+		int score = 0;
+		for (int j = 0; j < M; j++)
+			score += board[i][j];
+		ret = min(ret, score);
+	} 
+	return ret;
+}
+
+int res = INT_MAX;
+bool isUsed[6];
+vector<cmd> q;
+
+void solve(int cnt) {
+	if (cnt == K) {
+		res = min(res, getScore());
+		return;
+	}
+	int save[50][50];
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			save[i][j] = board[i][j];
+
+	for (int i = 0; i < K; i++)
+		if (!isUsed[i]) {
+			isUsed[i] = true;
+			rotateQuery(q[i].r, q[i].c, q[i].s);
+			solve(cnt + 1);
+			for (int i = 0; i < N; i++)
+				for (int j = 0; j < M; j++)
+					board[i][j] = save[i][j];
+			isUsed[i] = false;
+		}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M >> K;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> board[i][j];
+	q.resize(K);
+	for (int i = 0; i < K; i++)
+		cin >> q[i].r >> q[i].c >> q[i].s;
+	solve(0);
+	cout << res;
+}
