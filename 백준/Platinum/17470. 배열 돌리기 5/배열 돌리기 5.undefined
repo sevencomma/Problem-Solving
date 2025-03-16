@@ -1,0 +1,169 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int CUR[4] = { 0, 1, 2, 3 }; // leftUp rightUp rightDown leftDown
+bool REVY, REVX;
+int DIR; // 0 1 2 3 : N E S W (N : init)
+int N, M, R, q;
+int beginN, beginM;
+int board[100][100];
+int Array[50][50][4];
+int res[100][100];
+
+void swap(int& a, int& b) {
+	int t = a;
+	a = b;
+	b = t;
+}
+void setArrayPartition() {
+	int yL, yM, yH, xL, xM, xH;
+	yL = xL = 0;
+	yM = N / 2; xM = M / 2;
+	yH = N; xH = M;
+
+	int pos = 0;
+	for (int i = yL; i < yM; i++)
+		for (int j = xL; j < xM; j++)
+			Array[i - yL][j - xL][pos] = board[i][j];
+
+	pos++;
+	for (int i = yL; i < yM; i++)
+		for (int j = xM; j < xH; j++)
+			Array[i - yL][j - xM][pos] = board[i][j];
+
+	pos++;
+	for (int i = yM; i < yH; i++)
+		for (int j = xM; j < xH; j++)
+			Array[i - yM][j - xM][pos] = board[i][j];
+
+	pos++;
+	for (int i = yM; i < yH; i++)
+		for (int j = xL; j < xM; j++)
+			Array[i - yM][j - xL][pos] = board[i][j];
+}
+void cmd(int q) {
+	switch (q) {
+	case 1:
+		if (DIR % 2)
+			REVX = !REVX;
+		else
+			REVY = !REVY;
+		swap(CUR[0], CUR[3]);
+		swap(CUR[1], CUR[2]);
+		break;
+	case 2:
+		if (DIR % 2)
+			REVY = !REVY;
+		else
+			REVX = !REVX;
+		swap(CUR[0], CUR[1]);
+		swap(CUR[2], CUR[3]);
+		break;
+	case 3:
+		DIR = (DIR + 1) % 4;
+		swap(CUR[0], CUR[1]);
+		swap(CUR[0], CUR[2]);
+		swap(CUR[0], CUR[3]);
+		swap(N, M);
+		break;
+	case 4:
+		DIR = (DIR + 3) % 4;
+		swap(CUR[0], CUR[3]);
+		swap(CUR[0], CUR[2]);
+		swap(CUR[0], CUR[1]);
+		swap(N, M);
+		break;
+	case 5:
+		swap(CUR[0], CUR[1]);
+		swap(CUR[0], CUR[2]);
+		swap(CUR[0], CUR[3]);
+		break;
+	case 6:
+		swap(CUR[0], CUR[3]);
+		swap(CUR[0], CUR[2]);
+		swap(CUR[0], CUR[1]);
+		break;
+	}
+}
+void changeArray(int pos) {
+	int N = beginN / 2, M = beginM / 2;
+	int temp[50][50];
+
+	if (REVY) {
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < M; j++)
+				temp[i][j] = Array[i][j][pos];
+
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < M; j++)
+				Array[i][j][pos] = temp[N - i - 1][j];
+	}
+	if (REVX) {
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < M; j++)
+				temp[i][j] = Array[i][j][pos];
+
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < M; j++)
+				Array[i][j][pos] = temp[i][M - j - 1];
+	}
+	for (int i = 0; i < DIR; i++) {
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < M; j++)
+				temp[i][j] = Array[i][j][pos];
+
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < M; j++)
+				Array[j][N - i - 1][pos] = temp[i][j];
+		swap(N, M);
+	}
+}
+void getResult() {
+	int yL, yM, yH, xL, xM, xH;
+	yL = xL = 0;
+	yM = N / 2; xM = M / 2;
+	yH = N; xH = M;
+
+	int pos = CUR[0];
+	for (int i = yL; i < yM; i++)
+		for (int j = xL; j < xM; j++)
+			res[i][j] = Array[i - yL][j - xL][pos];
+
+	pos = CUR[1];
+	for (int i = yL; i < yM; i++)
+		for (int j = xM; j < xH; j++)
+			res[i][j] = Array[i - yL][j - xM][pos];
+
+	pos = CUR[2];
+	for (int i = yM; i < yH; i++)
+		for (int j = xM; j < xH; j++)
+			res[i][j] = Array[i - yM][j - xM][pos];
+
+	pos = CUR[3];
+	for (int i = yM; i < yH; i++)
+		for (int j = xL; j < xM; j++)
+			res[i][j] = Array[i - yM][j - xL][pos];
+}
+
+int main(void) {
+	cin.tie(NULL); cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M >> R;
+	beginN = N, beginM = M;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> board[i][j];
+	setArrayPartition();
+	for (int i = 0; i < R; i++) {
+		cin >> q;
+		cmd(q);
+	}
+	for (int i = 0; i < 4; i++)
+		changeArray(i);
+	getResult();
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++)
+			cout << res[i][j] << ' ';
+		cout << '\n';
+	}
+}
