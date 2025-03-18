@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct circle {
+	int x, y, r;
+};
+
+int T, x1, y1_, x2, y2, n, cx, cy, r;
+vector<circle> c;
+bool is_in_circle[50];
+
+bool pointIsInCircle(int x, int y, int r, int cx, int cy) {
+	int dSqaure = pow(x - cx, 2) + pow(y - cy, 2);
+	int rSqaure = pow(r, 2);
+
+	if (dSqaure < rSqaure)
+		return true;
+	return false;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	while (T--) {
+		cin >> x1 >> y1_ >> x2 >> y2 >> n;
+		c.clear();
+		c.resize(n);
+		for (int i = 0; i < n; i++)
+			cin >> c[i].x >> c[i].y >> c[i].r;
+
+		memset(is_in_circle, false, sizeof(is_in_circle));
+
+		for (int i = 0; i < n; i++)
+			if (pointIsInCircle(c[i].x, c[i].y, c[i].r, x1, y1_))
+				is_in_circle[i] = !is_in_circle[i];
+
+		for (int i = 0; i < n; i++)
+			if (pointIsInCircle(c[i].x, c[i].y, c[i].r, x2, y2))
+				is_in_circle[i] = !is_in_circle[i];
+
+		int cnt = 0;
+		for (int i = 0; i < n; i++)
+			if (is_in_circle[i])
+				cnt++;
+		cout << cnt << '\n';
+	}
+}
