@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, K, a, b, c, d;
+int board[301][301];
+int cache[301][301];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 1; i <= N; i++)
+		for (int j = 1; j <= M; j++)
+			cin >> board[i][j];
+
+	for (int i = 1; i <= N; i++)
+		for (int j = 1; j <= M; j++)
+			cache[i][j] = cache[i - 1][j] + cache[i][j - 1] - cache[i - 1][j - 1] + board[i][j];
+
+	cin >> K;
+	for (int i = 0; i < K; i++) {
+		cin >> a >> b >> c >> d;
+		cout << cache[c][d] - cache[a - 1][d] - cache[c][b - 1] + cache[a - 1][b - 1] << '\n';
+	}
+}
