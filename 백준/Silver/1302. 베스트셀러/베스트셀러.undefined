@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+unordered_map<string, int> cnt;
+int N;
+string s;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> s;
+		cnt[s]++;
+	}
+	vector<pair<int, string>> order;
+	for (auto& it : cnt)
+		order.push_back({ -it.second, it.first });
+	sort(order.begin(), order.end());
+	cout << order[0].second;
+}
