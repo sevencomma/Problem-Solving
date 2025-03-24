@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 123456789;
+int d[101][101];
+int N, M, a, b;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++)
+			d[i][j] = INF;
+		d[i][i] = 0;
+	}
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		d[a][b] = 1;
+		d[b][a] = 1;
+	}
+
+	for (int k = 1; k <= N; k++)
+		for (int i = 1; i <= N; i++)
+			for (int j = 1; j <= N; j++)
+				d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+
+	int resV = INF, resIdx = 1;
+	for (int i = 1; i <= N; i++) {
+		int temp = 0;
+		for (int j = 1; j <= N; j++)
+			temp += d[i][j];
+		if (resV > temp) {
+			resV = temp;
+			resIdx = i;
+		}
+	}
+	cout << resIdx;
+}
