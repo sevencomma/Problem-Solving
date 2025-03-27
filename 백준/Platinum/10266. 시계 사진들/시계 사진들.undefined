@@ -1,0 +1,82 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define SIZE 360000
+int N, x;
+string P;
+
+vector<int> getPartialMatch(const string& N) {
+	int m = N.size();
+	vector<int> pi(m, 0);
+	int begin = 1, matched = 0;
+
+	while (begin + matched < m) {
+		if (N[begin + matched] == N[matched]) {
+			matched++;
+			pi[begin + matched - 1] = matched;
+		}
+		else {
+			if (matched == 0)
+				begin++;
+			else {
+				begin += matched - pi[matched - 1];
+				matched = pi[matched - 1];
+			}
+		}
+	}
+	return pi;
+}
+
+vector<int> kmp(const string& H, const string& N) {
+	int n = H.size(), m = N.size();
+	vector<int> ret;
+	vector<int> pi = getPartialMatch(N);
+	int begin = 1, matched = 0;
+	
+	while (begin <= n - m) {
+		if (matched < m && H[begin + matched] == N[matched]) {
+			matched++;
+			if (matched == m) ret.push_back(begin);
+		}
+		else {
+			if (matched == 0)
+				begin++;
+			else {
+				begin += matched - pi[matched - 1];
+				matched = pi[matched - 1];
+			}
+		}
+	}
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	vector<bool> A(SIZE, false), B(SIZE, false);
+	string a = "", b = "";
+	for (int i = 0; i < N; i++) {
+		cin >> x;
+		A[x] = true;
+	}
+	for (int i = 0; i < N; i++) {
+		cin >> x;
+		B[x] = true;
+	}
+
+	for (int i = 0; i < SIZE; i++) {
+		if (A[i]) a += "1";
+		else a += "0";
+	}
+	for (int i = 0; i < SIZE; i++) {
+		if (B[i]) b += "1";
+		else b += "0";
+	}
+
+	vector<int> pos = kmp(a + a, b);
+	if (pos.empty())
+		cout << "impossible";
+	else
+		cout << "possible";
+}
