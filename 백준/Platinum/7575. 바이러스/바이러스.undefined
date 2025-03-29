@@ -1,0 +1,92 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, K, M;
+
+vector<int> getPartialMatch(const vector<int>& N) {
+	int m = N.size();
+	vector<int> pi(m, 0);
+	int begin = 1, matched = 0;
+
+	while (begin + matched < m) {
+		if (N[begin + matched] == N[matched]) {
+			matched++;
+			pi[begin + matched - 1] = matched;
+		}
+		else {
+			if (matched == 0)
+				begin++;
+			else {
+				begin += matched - pi[matched - 1];
+				matched = pi[matched - 1];
+			}
+		}
+	}
+	return pi;
+}
+vector<int> kmp(const vector<int>& H, const vector<int>& N) {
+	int n = H.size(), m = N.size();
+	vector<int> ret;
+	vector<int> pi = getPartialMatch(N);
+	int begin = 0, matched = 0;
+
+	while (begin <= n - m) {
+		if (matched < m && H[begin + matched] == N[matched]) {
+			matched++;
+			if (matched == m)
+				ret.push_back(begin);
+		}
+		else {
+			if (matched == 0)
+				begin++;
+			else {
+				begin += matched - pi[matched - 1];
+				matched = pi[matched - 1];
+			}
+		}
+	}
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> K;
+	vector<vector<int>> num(N);
+	for (int i = 0; i < N; i++) {
+		cin >> M;
+		num[i].resize(M);
+		for (int j = 0; j < M; j++)
+			cin >> num[i][j];
+	}
+
+	int m = num[0].size();
+	vector<vector<int>> pattern(m - K + 1);
+	vector<vector<int>> Rpattern(m - K + 1);
+	for (int i = 0; i < m - K + 1; i++) {
+		Rpattern[i] = (vector<int>(num[0].begin() + i, num[0].begin() + i + K));
+		pattern[i] = Rpattern[i];
+		reverse(Rpattern[i].begin(), Rpattern[i].end());
+	}
+
+	int n = pattern.size();
+	for (int i = 0; i < n; i++) {
+		bool res = true;
+		for (int j = 0; j < N; j++) {
+			vector<int> pos = kmp(num[j], pattern[i]);
+			if (pos.empty()) {
+				pos = kmp(num[j], Rpattern[i]);
+				if (pos.empty()) {
+					res = false;
+					break;
+				}
+			}
+		}
+
+		if (res) {
+			cout << "YES";
+			return 0;
+		}
+	}
+	cout << "NO";
+}
