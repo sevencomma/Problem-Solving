@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, C;
+vector<int> pos;
+
+bool solve(int K) {
+	int cnt = 1, last = pos[0], idx = 1;
+
+	while (idx < N && cnt < C) {
+		if (pos[idx] - last >= K) {
+			cnt++;
+			last = pos[idx];
+		}
+		idx++;
+	}
+	if (cnt == C) return true;
+	return false;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> C;
+	pos.resize(N);
+	for (int i = 0; i < N; i++)
+		cin >> pos[i];
+	sort(pos.begin(), pos.end());
+
+	int l = -1, r = pow(10, 9) + 1, mid;
+
+	while (l < r) {
+		mid = (l + r) / 2;
+		if (solve(mid))
+			l = mid + 1;
+		else
+			r = mid;
+	} cout << r - 1;
+}
