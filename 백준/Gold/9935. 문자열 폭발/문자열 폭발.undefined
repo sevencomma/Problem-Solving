@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+stack<pair<char, int>> S;
+string A, B;
+
+int main(void) {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> A >> B;
+
+	int j = 0, n = A.length(), m = B.length();
+	S.push({ ' ', 0 });
+
+	for (int i = 0; i < n; i++) {
+		if (A[i] == B[j])
+			j++;
+		else if (A[i] == B[0])
+			j = 1;
+		else
+			j = 0;
+		S.push({ A[i], j });
+
+		if (j == m) {
+			for (int c = 0; c < m; c++)
+				S.pop();
+			j = S.top().second;
+		}
+	}
+	if (S.size() == 1) {
+		cout << "FRULA";
+		return 0;
+	}
+	string res = "";
+	while (S.size() > 1) {
+		res += S.top().first;
+		S.pop();
+	}
+	reverse(res.begin(), res.end());
+	cout << res;
+}
