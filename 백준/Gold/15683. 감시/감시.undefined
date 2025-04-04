@@ -1,0 +1,114 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dy[4] = { -1, 0, 1, 0 };	// 위 왼 아래 오른
+int dx[4] = { 0, -1, 0, 1 };
+int N, M, res = 0, wallCnt;
+int board[8][8];
+bool temp[8][8];
+vector<pair<int, int>> cctv;
+int Dir[8];
+
+bool is_in_range(int y, int x) {
+	return y >= 0 && y < N && x >= 0 && x < M;
+}
+
+void setDir(int idx, int dir) {
+	Dir[idx] = dir;
+}
+
+void alloc(int y, int x, int mode, int dir) {
+	int cy = y, cx = x;
+
+	while (is_in_range(cy, cx) && board[cy][cx] != 6) {
+		temp[cy][cx] = true;
+		cy += dy[dir];
+		cx += dx[dir];
+	}
+
+	cy = y, cx = x;
+	if (mode == 2 || mode == 4 || mode == 5)
+		while (is_in_range(cy, cx) && board[cy][cx] != 6) {
+			temp[cy][cx] = true;
+			cy += dy[(dir + 2) % 4];
+			cx += dx[(dir + 2) % 4];
+		}
+	
+	cy = y, cx = x;
+	if (mode == 3 || mode == 4 || mode == 5)
+		while (is_in_range(cy, cx) && board[cy][cx] != 6) {
+			temp[cy][cx] = true;
+			cy += dy[(dir + 1) % 4];
+			cx += dx[(dir + 1) % 4];
+		}
+
+	cy = y, cx = x;
+	if (mode == 5)
+		while (is_in_range(cy, cx) && board[cy][cx] != 6) {
+			temp[cy][cx] = true;
+			cy += dy[(dir + 3) % 4];
+			cx += dx[(dir + 3) % 4];
+		}
+}
+
+int getArea() {
+	memset(temp, 0, sizeof(temp));
+	for (int i = 0; i < cctv.size(); i++) {
+		int y = cctv[i].first;
+		int x = cctv[i].second;
+		int mode = board[y][x];
+		int dir = Dir[i];
+		alloc(y, x, mode, dir);
+	}
+
+	int cnt = 0;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			if (temp[i][j])
+				cnt++;
+	return cnt;
+}
+
+void solve(int idx) {
+	if (idx == cctv.size()) {
+		res = max(res, getArea());
+		return;
+	}
+
+	int y = cctv[idx].first;
+	int x = cctv[idx].second;
+
+	if (board[y][x] == 5) {
+		setDir(idx, 0);
+		solve(idx + 1);
+		return;
+	}
+	if (board[y][x] == 2) {
+		for (int dir = 0; dir < 2; dir++) {
+			setDir(idx, dir);
+			solve(idx + 1);
+		}
+		return;
+	}
+
+	for (int dir = 0; dir < 4; dir++) {
+		setDir(idx, dir);
+		solve(idx + 1);
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++) {
+			cin >> board[i][j];
+			if (board[i][j] > 0 && board[i][j] < 6)
+				cctv.push_back({ i, j });
+			else if (board[i][j] == 6)
+				wallCnt++;
+		}
+	solve(0);
+	cout << N * M - res - wallCnt;
+}
