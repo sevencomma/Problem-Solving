@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, x;
+vector<int> graph[1001];
+set<pair<int, int>> edge;
+int indegree[1001];
+vector<int> res;
+
+void topsort() {
+	queue<int> q;
+
+	for (int i = 1; i <= N; i++)
+		if (indegree[i] == 0)
+			q.push(i);
+
+	while (!q.empty()) {
+		int cur = q.front();
+		q.pop();
+		res.push_back(cur);
+
+		for (int next : graph[cur]) {
+			indegree[next]--;
+			if (indegree[next] == 0)
+				q.push(next);
+		}
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	
+	for (int i = 0; i < M; i++) {
+		cin >> x;
+		vector<int> seq(x);
+		for (int j = 0; j < x; j++)
+			cin >> seq[j];
+		for (int j = 0; j < x - 1; j++)
+			edge.insert({ seq[j], seq[j + 1] });
+	}
+	for (auto& it : edge) {
+		graph[it.first].push_back(it.second);
+		indegree[it.second]++;
+	}
+	topsort();
+	if (res.size() != N)
+		cout << 0;
+	else
+		for (auto& it : res)
+			cout << it << '\n';
+}
