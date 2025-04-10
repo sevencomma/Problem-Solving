@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, t, x;
+vector<int> graph[10001];
+int duration[10001];
+int indegree[10001];
+int startTime[10001];
+
+vector<pair<int, int>> res;	// end time, idx
+
+void topsort() {
+	queue<pair<int, int>> q; // idx, begin time
+
+	for (int i = 1; i <= N; i++)
+		if (indegree[i] == 0) {
+			q.push({ i, 0 });
+			startTime[i] = 0;
+		}
+
+	int cur, begin;
+	while (!q.empty()) {
+		tie(cur, begin) = q.front();
+		q.pop();
+		int nextTime = begin + duration[cur];
+		res.push_back({ nextTime, cur });
+
+		for (auto& next : graph[cur]) {
+			indegree[next]--;
+			startTime[next] = max(startTime[next], nextTime);
+			if (indegree[next] == 0)
+				q.push({ next, startTime[next]});
+		}
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 1; i <= N; i++) {
+		cin >> t >> x;
+		vector<int> prev(x);
+		for (int j = 0; j < x; j++)
+			cin >> prev[j];
+		duration[i] = t;
+		indegree[i] = prev.size();
+		for (auto& it : prev)
+			graph[it].push_back(i);
+	}
+	topsort();
+	sort(res.rbegin(), res.rend());
+	cout << res[0].first;
+}
