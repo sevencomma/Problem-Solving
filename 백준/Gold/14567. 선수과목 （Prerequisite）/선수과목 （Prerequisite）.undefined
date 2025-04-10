@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, a, b;
+vector<int> graph[1001];
+int indegree[1001];
+int minSemester[1001];
+
+void topsort() {
+	queue<pair<int, int>> q; // idx, semester
+
+	for (int i = 1; i <= N; i++)
+		if (indegree[i] == 0)
+			q.push({i, 1});
+
+	int cur, cnt;
+	while (!q.empty()) {
+		tie(cur, cnt) = q.front();
+		q.pop();
+
+		minSemester[cur] = cnt;
+		for (auto& next : graph[cur]) {
+			indegree[next]--;
+			if (indegree[next] == 0)
+				q.push({ next, cnt + 1 });
+		}
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		graph[a].push_back(b);
+		indegree[b]++;
+	}
+	topsort();
+	for (int i = 1; i <= N; i++)
+		cout << minSemester[i] << ' ';
+}
