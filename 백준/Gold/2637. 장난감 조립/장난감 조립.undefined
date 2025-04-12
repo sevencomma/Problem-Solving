@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, a, b, c;
+vector<pair<int, int>> graph[101]; // graph[i] = {x, y} : i를 만들기 위해서 x가 y개 필요
+map<int, bool> base;
+map<int, int> cnt;
+int outdegree[101];
+int indegree[101];
+int memo[101];
+
+void bfs() {
+	queue<pair<int, int>> q;	// {a, b} : a가 b개 필요
+	for (int i = 1; i <= N; i++)
+		if (outdegree[i] == 0)
+			base[i] = true;
+
+	q.push({ N, 1 });
+	memo[N] = 1;
+	int cur, nums;
+
+	while (!q.empty()) {
+		tie(cur, nums) = q.front();
+		q.pop();
+
+		if (base[cur])
+			cnt[cur] += nums;
+
+		for (auto& next : graph[cur]) {
+			indegree[next.first]--;
+			memo[next.first] += next.second * nums;
+			if (indegree[next.first] == 0)
+				q.push({ next.first, memo[next.first] });
+		}
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b >> c;
+		graph[a].push_back({ b, c });
+		outdegree[a]++;
+		indegree[b]++;
+	}
+	bfs();
+	vector<pair<int, int>> res;
+	for (auto& it : cnt)
+		res.push_back({ it.first, it.second });
+	sort(res.begin(), res.end());
+	for (auto& it : res)
+		cout << it.first << ' ' << it.second << '\n';
+}
