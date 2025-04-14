@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+typedef long long ll;
+unordered_map<ll, int> leftCnt;
+unordered_map<ll, int> rightCnt;
+
+int N, S;
+int x[41];
+
+void makePartSum(int l, int r, int n, ll key) {
+	if (l == r) {
+		bitset<64> k = key;
+
+		if (r == N) {
+			int offset = N / 2;
+			ll sum = 0;
+			for (int i = offset; i < offset + n; i++)
+				if (k[i])
+					sum += x[i];
+			rightCnt[sum]++;
+		}
+		else {
+			ll sum = 0;
+			for (int i = 0; i < n; i++)
+				if (k[i])
+					sum += x[i];
+			leftCnt[sum]++;
+		}
+		return;
+	}
+	makePartSum(l + 1, r, n, key + ((ll)1 << l));
+	makePartSum(l + 1, r, n, key);
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> S;
+	for (int i = 0; i < N; i++)
+		cin >> x[i];
+	int mid = N / 2;
+	makePartSum(0, mid, mid, 0);
+	makePartSum(mid, N, N - mid, 0);
+
+	ll res = 0;
+	for (auto& it : leftCnt) {
+		if (rightCnt[S - it.first] == 0) continue;
+		res += (ll)it.second * rightCnt[S - it.first];
+	}
+	
+	if (S == 0)
+		cout << res - 1;
+	else
+		cout << res;
+}
