@@ -1,0 +1,24 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void canttor(string& s, int N, int idx) {
+	if (N == 0) {
+		s[idx] = '-';
+		return;
+	}
+
+	canttor(s, N - 1, idx);
+	canttor(s, N - 1, idx + pow(3, N - 1) * 2);
+}
+
+int main(void) {
+	int N;
+	while (1) {
+		cin >> N;
+		if (cin.eof()) break;
+
+		string s(pow(3, N), ' ');
+		canttor(s, N, 0);
+		cout << s << '\n';
+	}
+}
