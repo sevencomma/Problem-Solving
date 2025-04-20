@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, x = -1;
+vector<int> a;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	a.resize(N);
+	for (int i = 0; i < N; i++)
+		cin >> a[i];
+	
+	for (int i = N - 1; i > 0; i--)
+		if (a[i] > a[i - 1]) {
+			x = i - 1;
+			break;
+		}
+	if (x == -1) {
+		cout << -1;
+		return 0;
+	}
+
+	int k = INT_MAX, idx;
+	for (int i = x + 1; i < N; i++)
+		if (a[i] > a[x] && a[i] < k) {
+			k = a[i];
+			idx = i;
+		}
+
+	int t = a[x];
+	a[x] = a[idx];
+	a[idx] = t;
+
+	sort(a.begin() + x + 1, a.end());
+	for (auto& it : a)
+		cout << it << ' ';
+}
