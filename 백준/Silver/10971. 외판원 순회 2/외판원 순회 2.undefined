@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+int cost[10][10];
+bool visited[10];
+
+int solve(int cur, int cnt, int val) {
+	int ret = INT_MAX;
+	if (cnt == N)
+		return (cost[cur][0] == 0) ? INT_MAX : val + cost[cur][0];
+
+	for (int i = 0; i < N; i++) {
+		if (visited[i] || cost[cur][i] == 0) continue;
+		visited[i] = true;
+		ret = min(ret, solve(i, cnt + 1, val + cost[cur][i]));
+		visited[i] = false;
+	}
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> cost[i][j];
+
+	visited[0] = true;
+	cout << solve(0, 1, 0);
+}
