@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 123456789;
+int cache[100001];
+int N;
+
+int dp(int x) {
+	if (x < 0) return INF;
+	int& ret = cache[x];
+	if (ret != -1) return ret;
+
+	ret = INF;
+	ret = min(ret, min(dp(x - 2) + 1, dp(x - 5) + 1));
+
+	return ret;
+}
+
+int main(void) {
+	cin >> N;
+	memset(cache, -1, sizeof(cache));
+	cache[2] = cache[5] = 1;
+
+	int res = dp(N);
+	if (res == INF) cout << -1;
+	else cout << res;
+}
