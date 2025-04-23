@@ -1,0 +1,108 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct point {
+	int y, x;
+};
+int dy[4] = { -1, 0, 0, 1 };
+int dx[4] = { 0, -1, 1, 0 };
+
+int R, C, N, x;
+char board[100][100];
+bool visited[100][100];
+bool is_in_range(int y, int x) {
+	return y >= 0 && y < R && x >= 0 && x < C;
+}
+
+bool FallCheckbyBfs(int y, int x, vector<point>& c) {
+	bool drop = true;
+	queue<point> q;
+	q.push({ y, x });
+	visited[y][x] = true;
+
+	while (!q.empty()) {
+		point cur = q.front();
+		q.pop();
+		c.push_back(cur);
+
+		if (cur.y == R - 1)
+			drop = false;
+
+		for (int i = 0; i < 4; i++) {
+			int ny = cur.y + dy[i];
+			int nx = cur.x + dx[i];
+			if (is_in_range(ny, nx) && !visited[ny][nx] && board[ny][nx] == 'x') {
+				q.push({ ny, nx });
+				visited[ny][nx] = true;
+			}
+		}
+	}
+	return drop;
+}
+
+void breakdown(int y, int x) { // 파괴 시 인접한 노드들의 클러스터를 확인해서 drop시킬지 결정
+	board[y][x] = '.';
+	memset(visited, 0, sizeof(visited));
+	vector<point> cluster[4];
+	for (int i = 0; i < 4; i++) {
+		int ny = y + dy[i];
+		int nx = x + dx[i];
+		if (is_in_range(ny, nx) && !visited[ny][nx] && board[ny][nx] == 'x') {
+			bool drop = FallCheckbyBfs(ny, nx, cluster[i]);
+			if (!drop) continue;
+			
+			// falling
+			for (auto& it : cluster[i])
+				board[it.y][it.x] = '1';
+
+			int diff = INT_MAX;
+			for (auto& it : cluster[i]) {
+				int d = 1;
+				while (it.y + d < R && (board[it.y + d][it.x] == '.' || board[it.y + d][it.x] == '1'))
+					d++;
+				diff = min(diff, d);
+			}
+
+			for (auto& it : cluster[i]) {
+				if (board[it.y][it.x] == '1') board[it.y][it.x] = '.';
+				board[it.y + diff - 1][it.x] = 'x';
+			}
+		}
+	}
+}
+
+void simulation(int h, bool right) {
+	int ty = h, tx;
+	if (right) {
+		tx = C - 1;
+		while (tx >= 0 && board[ty][tx] != 'x')
+			tx--;
+	}
+	else {
+		tx = 0;
+		while (tx < C && board[ty][tx] != 'x')
+			tx++;
+	}
+	if (tx < 0 || tx >= C) return;
+	breakdown(ty, tx);
+}
+
+int main(void) {
+	cin.tie(NULL); cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> R >> C;
+	for (int i = 0; i < R; i++)
+		for (int j = 0; j < C; j++)
+			cin >> board[i][j];
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> x;
+		simulation(R - x, i % 2);
+	}
+
+	for (int i = 0; i < R; i++) {
+		for (int j = 0; j < C; j++)
+			cout << board[i][j];
+		cout << '\n';
+	}
+}
