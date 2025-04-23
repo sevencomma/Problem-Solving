@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, res = INT_MAX;
+int board[20][20];
+vector<int> team;
+
+int score(vector<int>& x) {
+	int len = x.size();
+	int ret = 0;
+	for (int i = 0; i < len; i++)
+		for (int j = i + 1; j < len; j++)
+			ret += (board[x[i]][x[j]] + board[x[j]][x[i]]);
+
+	return ret;
+}
+
+int getScoreDiff() {
+	vector<int> a, b;
+	for (int i = 0; i < N; i++)
+		if (team[i]) a.push_back(i);
+		else b.push_back(i);
+
+	return abs(score(a) - score(b));
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> board[i][j];
+
+	for (int i = 1; i <= N / 2; i++) {
+		team.clear();
+		team = vector<int>(N, 0);
+		fill(team.begin(), team.begin() + i, 1);
+
+		do {
+			res = min(res, getScoreDiff());
+		} while (prev_permutation(team.begin(), team.end()));
+	}
+	cout << res;
+}
