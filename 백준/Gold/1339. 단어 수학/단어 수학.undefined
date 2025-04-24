@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	vector<string> s(N);
+	for (int i = 0; i < N; i++)
+		cin >> s[i];
+
+	for (int i = 0; i < N; i++)
+		reverse(s[i].begin(), s[i].end());
+
+	map<char, int> val;
+	for (auto& word : s)
+		for (int i = 0; i < word.length(); i++)
+			val[word[i]] += pow(10, i);
+
+	vector<int> x;
+	for (auto& it : val)
+		x.push_back(it.second);
+	sort(x.rbegin(), x.rend());
+
+	int res = 0, k = 9;
+	for (auto& it : x)
+		res += (k--) * it;
+	cout << res;
+}
