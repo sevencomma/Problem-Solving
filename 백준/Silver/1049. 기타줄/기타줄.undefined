@@ -1,0 +1,23 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(void) {
+	int N, M, a, b, k6 = 1000, k1 = 1000;
+	cin >> N >> M;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		k6 = min(k6, a);
+		k1 = min(k1, b);
+	}
+
+	if (6 * k1 <= k6) {
+		cout << k1 * N;
+		return 0;
+	}
+	int res = k6 * (N / 6);
+	N -= (6 * (N / 6));
+	if (N * k1 <= k6) res += k1 * N;
+	else res += k6;
+
+	cout << res;
+}
