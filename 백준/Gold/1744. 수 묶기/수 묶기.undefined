@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(void) {
+	int N;
+	cin >> N;
+	vector<int> x(N);
+	for (int i = 0; i < N; i++)
+		cin >> x[i];
+
+	sort(x.rbegin(), x.rend());
+	int i = 0, res = 0;
+	while (i + 1 < N) {
+		if (x[i + 1] > 1) {
+			res += x[i] * x[i + 1];
+			i += 2;
+		}
+		else if (x[i + 1] > 0 || (x[i] > 0 && x[i + 1] <= 0)) {
+			res += x[i];
+			i++;
+		}
+		else if (x[i] <= 0) break;
+	}
+
+	int j = N - 1; // i ~ j 처리
+	while (j >= i) {
+		if (j > i) {
+			res += x[j] * x[j - 1];
+			j -= 2;
+		}
+		else {
+			res += x[j];
+			j--;
+		}
+	}
+	cout << res;
+}
