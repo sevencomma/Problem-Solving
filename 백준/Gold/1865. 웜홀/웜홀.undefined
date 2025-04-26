@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define INF 123456789
+
+struct edge {
+	int src, dest, weight;
+};
+
+int T, N, M, W, a, b, w;
+
+vector<edge> Edge;
+int d[501];
+
+bool bellman(int start) {
+	d[start] = 0;
+
+	for (int i = 0; i < N - 1; i++)
+		for (int j = 0; j < 2 * M + W; j++) {
+			int from = Edge[j].src;
+			int to = Edge[j].dest;
+			int w = Edge[j].weight;
+
+			if (d[from] == INF) continue;
+			if (d[to] < d[from] + w) continue;
+			d[to] = d[from] + w;
+		}
+	if (d[start] < 0) return true;
+	return false;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	while (T--) {
+		cin >> N >> M >> W;
+		Edge.clear();
+
+		for (int i = 0; i < M; i++) {
+			cin >> a >> b >> w;
+			Edge.push_back({ a, b, w });
+			Edge.push_back({ b, a, w });
+		}
+		set<int> start;
+		for (int i = 0; i < W; i++) {
+			cin >> a >> b >> w;
+			Edge.push_back({ a, b, -w });
+			start.insert(a);
+		}
+
+		bool ret = false;
+		for (auto& it : start) {
+			for (int i = 1; i <= N; i++)
+				d[i] = INF;
+			ret |= bellman(it);
+			if (ret) break;
+		}
+
+		if (ret) cout << "YES\n";
+		else cout << "NO\n";
+	}
+}
