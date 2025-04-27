@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define INF 123456789
+
+int T, N;
+vector<int> seq;
+int cache[500][500];
+int sum[500];
+
+int partSum(int l, int r) {
+	if (l == 0) return sum[r];
+	return sum[r] - sum[l - 1];
+}
+
+int dp(int l, int r) {
+	if (l == r) return 0;
+	if (l + 1 == r) return seq[l] + seq[r];
+	int& ret = cache[l][r];
+	if (ret != -1) return ret;
+	ret = INF;
+
+	for (int i = l; i < r; i++) {
+		ret = min(ret, dp(l, i) + dp(i + 1, r) + partSum(l, r));
+	}
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	while (T--) {
+		cin >> N;
+		seq.clear();
+		memset(cache, -1, sizeof(cache));
+		memset(sum, -1, sizeof(sum));
+		seq.resize(N);
+		for (int i = 0; i < N; i++)
+			cin >> seq[i];
+		sum[0] = seq[0];
+		for (int i = 1; i < N; i++)
+			sum[i] = sum[i - 1] + seq[i];
+
+		cout << dp(0, N - 1) << '\n';
+	}
+}
