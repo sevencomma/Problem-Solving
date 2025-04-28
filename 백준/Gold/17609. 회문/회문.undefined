@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+string s;
+
+int solve(string& s) {
+	int l = 0, r = s.length() - 1, diff = 0;
+
+	while (l < r) {
+		if (s[l] != s[r])
+			diff++;
+		l++, r--;
+	}
+	if (diff == 0)
+		return 0;
+
+	l = 0, r = s.length() - 1, diff = 0;
+	while (l < r) {
+		if (s[l] != s[r]) {
+			diff++;
+			l++;
+			continue;
+		}
+		l++, r--;
+	}
+	if (diff == 1)
+		return 1;
+	
+	l = 0, r = s.length() - 1, diff = 0;
+	while (l < r) {
+		if (s[l] != s[r]) {
+			diff++;
+			r--;
+			continue;
+		}
+		l++, r--;
+	}
+	if (diff == 1)
+		return 1;
+
+	return 2;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	while (N--) {
+		cin >> s;
+		cout << solve(s) << '\n';
+	}
+}
