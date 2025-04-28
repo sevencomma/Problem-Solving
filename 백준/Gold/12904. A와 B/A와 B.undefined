@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string S, T;
+
+bool solve() {
+	int n = S.size(), m = T.size();
+
+	while (n < m) {
+		if (T[m - 1] == 'A') {
+			T = T.substr(0, m - 1);
+			m--;
+		}
+		else {
+			T = T.substr(0, m - 1);
+			m--;
+			reverse(T.begin(), T.end());
+		}
+	}
+	if (S == T) return true;
+	return false;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	getline(cin, S);
+	getline(cin, T);
+	if (solve()) cout << 1;
+	else cout << 0;
+}
