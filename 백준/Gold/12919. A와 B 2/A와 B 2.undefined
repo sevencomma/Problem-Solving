@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+string S, T;
+int len;
+
+int bfs(string s) {
+	queue<string> q;
+	q.push(s);
+	unordered_map<string, bool> visited;
+	visited[s] = true;
+
+	string TT = T;
+	reverse(TT.begin(), TT.end());
+	TT += " " + T;
+
+	while (!q.empty()) {
+		string cur = q.front();
+		q.pop();
+
+		if (TT.find(cur) == string::npos) {
+			continue;
+		}
+
+		if (cur.length() == len) {
+			if (cur == T) return 1;
+			continue;
+		}
+
+		if (!visited[cur + "A"]) {
+			visited[cur + "A"] = true;
+			q.push(cur + "A");
+		}
+		cur += "B";
+		reverse(cur.begin(), cur.end());
+		if (!visited[cur]) {
+			visited[cur] = true;
+			q.push(cur);
+		}
+	}
+
+	return 0;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> S >> T;
+	len = T.length();
+	cout << bfs(S);
+}
