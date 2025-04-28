@@ -1,0 +1,16 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(void) {
+	string A, B;
+	cin >> A >> B;
+	int res = INT_MAX, n = A.length(), m = B.length();
+
+	for (int i = 0; i <= m - n; i++) {
+		int diff = 0;
+		for (int j = 0; j < n; j++)
+			if (A[j] != B[i + j])
+				diff++;
+		res = min(res, diff);
+	} cout << res;
+}
