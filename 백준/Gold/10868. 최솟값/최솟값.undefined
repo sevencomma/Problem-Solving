@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+#define INF numeric_limits<ll>::max();
+
+int N, M, a, b;
+vector<ll> seq;
+
+struct RMQ {
+	int n;
+	vector<int> rangeMin;
+
+	RMQ (const vector<ll>& array) {
+		n = array.size();
+		int x = 2;
+		while (x <= n)
+			x *= 2;
+		rangeMin.resize(x * 2);
+		init(array, 0, n - 1, 1);
+	}
+
+	ll init(const vector<ll>& array, int left, int right, int node) {
+		if (left == right)
+			return rangeMin[node] = array[left];
+		int mid = (left + right) / 2;
+		ll leftMin = init(array, left, mid, node * 2);
+		ll rightMin = init(array, mid + 1, right, node * 2 + 1);
+		return rangeMin[node] = min(leftMin, rightMin);
+	}
+
+	ll query(int left, int right, int node, int nodeLeft, int nodeRight) {
+		if (right < nodeLeft || nodeRight < left) return INF;
+
+		if (left <= nodeLeft && nodeRight <= right) return rangeMin[node];
+
+		int mid = (nodeLeft + nodeRight) / 2;
+		return min(query(left, right, node * 2, nodeLeft, mid),
+			query(left, right, node * 2 + 1, mid + 1, nodeRight));
+	}
+
+	ll query(int left, int right) {
+		return query(left, right, 1, 0, n - 1);
+	}
+
+	ll update(int index, ll newValue, int node, int nodeLeft, int nodeRight) {
+		if (index < nodeLeft || nodeRight < index) return rangeMin[node];
+
+		if (nodeLeft == nodeRight) return rangeMin[node] = newValue;
+
+		int mid = (nodeLeft + nodeRight) / 2;
+		return rangeMin[node] = min(
+			update(index, newValue, node * 2, nodeLeft, mid),
+			update(index, newValue, node * 2 + 1, mid + 1, nodeRight));
+	}
+
+	ll update(int index, int newValue) {
+		return update(index, newValue, 1, 0, n - 1);
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	seq.resize(N);
+	for (int i = 0; i < N; i++)
+		cin >> seq[i];
+	RMQ x(seq);
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		cout << x.query(a - 1, b - 1) << '\n';
+	}
+}
