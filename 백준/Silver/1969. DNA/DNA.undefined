@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, hm;
+vector<string> a;
+string res = "";
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	a.resize(N);
+	for (int i = 0; i < N; i++)
+		cin >> a[i];
+	
+	for (int i = 0; i < M; i++) {
+		map<char, int> cnt;
+		vector<pair<int, char>> b;
+		for (int j = 0; j < N; j++)
+			cnt[a[j][i]]++;
+		for (auto& it : cnt)
+			b.push_back(make_pair(-it.second, it.first));
+		sort(b.begin(), b.end());
+		res += b[0].second;
+		for (int j = 0; j < N; j++)
+			if (a[j][i] != b[0].second)
+				hm++;
+	} cout << res << '\n' << hm;
+}
