@@ -1,0 +1,90 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef pair<int, int> item;
+#define INF numeric_limits<int>::max()
+#define NINF numeric_limits<int>::min()
+
+int N, M, a, b;
+vector<int> arr;
+
+
+int X;
+
+
+struct RMQ {
+	int N;
+	vector<item> rangeMin;
+
+	RMQ(vector<int>& array) {
+		N = array.size();
+		int x = 2;
+		while (x <= N)
+			x *= 2;
+		rangeMin.resize(x * 2);
+		init(array, 0, N - 1, 1);
+	}
+
+	item init(vector<int>& arr, int left, int right, int node) {
+		if (left == right) return rangeMin[node] = { arr[left], arr[left] };
+
+		int mid = (left + right) / 2;
+		item LEFT = init(arr, left, mid, node * 2);
+		item RIGHT = init(arr, mid + 1, right, node * 2 + 1);
+		return rangeMin[node] = {
+			min(LEFT.first, RIGHT.first),
+			max(LEFT.second, RIGHT.second)
+		};
+	}
+
+	item query(int left, int right, int node, int nodeLeft, int nodeRight) {
+		X++;
+		if (right < nodeLeft || left > nodeRight) return { INF, NINF };
+		if (left <= nodeLeft && nodeRight <= right) return rangeMin[node]; 
+
+		int mid = (nodeLeft + nodeRight) / 2;
+		item LEFT = query(left, right, node * 2, nodeLeft, mid);
+		item RIGHT = query(left, right, node * 2 + 1, mid + 1, nodeRight);
+		return  {
+			min(LEFT.first, RIGHT.first),
+			max(LEFT.second, RIGHT.second)
+		};
+	}
+
+	item query(int left, int right) {
+		return query(left, right, 1, 0, N - 1);
+	}
+
+	item update(int index, item newValue, int node, int nodeLeft, int nodeRight) {
+		if (nodeLeft > index || nodeRight < index) return rangeMin[node];
+		if (nodeLeft == nodeRight) return rangeMin[node] = newValue;
+
+		int mid = (nodeLeft + nodeRight) / 2;
+		item LEFT = update(index, newValue, node * 2, nodeLeft, mid);
+		item RIGHT = update(index, newValue, node * 2 + 1, mid + 1, nodeRight);
+		return rangeMin[node] = {
+			min(LEFT.first, RIGHT.first),
+			max(LEFT.second, RIGHT.second)
+		};
+	}
+
+	item update(int index, item newValue) {
+		return update(index, newValue, 1, 0, N - 1);
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	arr.resize(N);
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
+	RMQ x(arr);
+
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		auto c = x.query(a - 1, b - 1);
+		cout << c.first << ' ' << c.second << '\n';
+	}
+}
