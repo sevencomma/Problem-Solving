@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<string> split(string& s, string delimeter) {
+	vector<string> ret;
+	int idx = 0;
+	string token = "";
+
+	while ((idx = s.find(delimeter)) != string::npos) {
+		token = s.substr(0, idx);
+		s = s.substr(idx + delimeter.length());
+		ret.push_back(token);
+	} ret.push_back(s);
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	string sen;
+	getline(cin, sen);
+	vector<string> name = split(sen, "-");
+	for (auto& it : name)
+		cout << it[0];
+}
