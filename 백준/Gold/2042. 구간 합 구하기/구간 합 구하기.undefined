@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+ll N, M, K, a, b, c;
+
+struct FenwickTree {
+	vector<ll> tree;
+	FenwickTree(int n) : tree(n + 1, 0) {}
+
+	ll get(int pos) {
+		pos++;
+		return tree[pos];
+	}
+
+	ll sum(int pos) {
+		pos++;
+		ll ret = 0;
+
+		while (pos > 0) {
+			ret += tree[pos];
+			pos &= (pos - 1);
+		}
+		return ret;
+	}
+
+	void add(int pos, ll val) {
+		pos++;
+
+		while (pos < tree.size()) {
+			tree[pos] += val;
+			pos += (pos & -pos);
+		}
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M >> K;
+	vector<ll> orig(N);
+	FenwickTree x(N);
+	for (int i = 0; i < N; i++) {
+		cin >> a;
+		x.add(i, a);
+		orig[i] = a;
+	}
+	for (int i = 0; i < M + K; i++) {
+		cin >> a >> b >> c;
+		if (a == 1) {
+			x.add(b - 1, c - orig[b - 1]);
+			orig[b - 1] = c;
+		}
+		else {
+			cout << x.sum(c - 1) - x.sum(b - 2) << '\n';
+		}
+	}
+}
