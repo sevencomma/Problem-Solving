@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+vector<string> board;
+
+void quadTree(int n, int y, int x, string& ans) {
+	bool one = true;
+	char c = board[y][x];
+
+	for (int i = y; i < y + n; i++) {
+		for (int j = x; j < x + n; j++)
+			if (board[i][j] != c) {
+				one = false;
+				break;
+			}
+		if (!one) break;
+	}
+	if (one) {
+		ans += c;
+		return;
+	}
+
+	ans += '(';
+	quadTree(n / 2, y, x, ans);
+	quadTree(n / 2, y, x + n / 2, ans);
+	quadTree(n / 2, y + n / 2, x, ans);
+	quadTree(n / 2, y + n / 2, x + n / 2, ans);
+	ans += ')';
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	board.resize(N);
+	for (int i = 0; i < N; i++)
+		cin >> board[i];
+	string res = "";
+	quadTree(N, 0, 0, res);
+	cout << res;
+}
