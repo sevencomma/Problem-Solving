@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MOD 1000000007
+typedef long long ll;
+int N, M, K, a, b, c;
+
+struct SegmentTree {
+	int N;
+	vector<int> tree;
+
+	SegmentTree(vector<int>& arr) {
+		N = arr.size();
+		int x = 2;
+		while (x <= N) x *= 2;
+		tree.resize(x * 2);
+		init(arr, 0, N - 1, 1);
+	}
+
+	int init(vector<int>& arr, int left, int right, int node) {
+		if (left == right) return tree[node] = arr[left];
+
+		int mid = (left + right) / 2;
+		return tree[node] =
+			((ll)init(arr, left, mid, node * 2) * init(arr, mid + 1, right, node * 2 + 1)) % MOD;
+	}
+
+	int query(int left, int right, int node, int nodeLeft, int nodeRight) {
+		if (right < nodeLeft || left > nodeRight) return 1;	// 곱의 항등식
+		if (left <= nodeLeft && nodeRight <= right) return tree[node];
+
+		int mid = (nodeLeft + nodeRight) / 2;
+		return ((ll)query(left, right, node * 2, nodeLeft, mid) *
+			query(left, right, node * 2 + 1, mid + 1, nodeRight)) % MOD;
+	}
+
+	int query(int left, int right) {
+		return query(left, right, 1, 0, N - 1);
+	}
+
+	int update(int index, int newVal, int node, int nodeLeft, int nodeRight) {
+		if (index < nodeLeft || index > nodeRight) return tree[node];
+		if (nodeLeft == nodeRight) return tree[node] = newVal;
+
+		int mid = (nodeLeft + nodeRight) / 2;
+		return tree[node] = ((ll)update(index, newVal, node * 2, nodeLeft, mid) *
+			update(index, newVal, node * 2 + 1, mid + 1, nodeRight)) % MOD;
+	}
+
+	void update(int index, int newVal) {
+		update(index, newVal, 1, 0, N - 1);
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M >> K;
+	vector<int> arr(N);
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
+
+	SegmentTree x(arr);
+	for (int i = 0; i < M + K; i++) {
+		cin >> a >> b >> c;
+		if (a == 1) {
+			x.update(b - 1, c);
+		}
+		else {
+			cout << x.query(b - 1, c - 1) << '\n';
+		}
+	}
+}
