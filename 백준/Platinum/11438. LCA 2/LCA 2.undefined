@@ -1,0 +1,92 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MAX_N 100001
+int N, M, a, b, Idx = 0;
+vector<int> seq;
+vector<vector<int>> graph;
+int no2idx[MAX_N], idx2no[MAX_N];
+bool visited[MAX_N];
+int locInSeq[MAX_N], depth[MAX_N];
+
+void order(int cur, int d) {
+	no2idx[cur] = Idx;
+	idx2no[Idx++] = cur;
+	depth[cur] = d;
+	locInSeq[cur] = seq.size();
+	seq.push_back(no2idx[cur]);
+	visited[cur] = true;
+
+	for (auto& next : graph[cur]) {
+		if (visited[next]) continue;
+		order(next, d + 1);
+		seq.push_back(no2idx[cur]);
+	}
+}
+
+struct RMQ {
+	int N;
+	vector<int> tree;
+	RMQ(vector<int>& arr) {
+		N = arr.size();
+		int x = 2;
+		while (x <= N) x *= 2;
+		tree.resize(x * 2);
+		init(arr, 0, N - 1, 1);
+	}
+
+	int init(vector<int>& arr, int left, int right, int node) {
+		if (left == right) return tree[node] = arr[left];
+		int mid = (left + right) / 2;
+		return tree[node] = min(init(arr, left, mid, node * 2),
+			init(arr, mid + 1, right, node * 2 + 1));
+	}
+
+	int query(int left, int right, int node, int nodeLeft, int nodeRight) {
+		if (right < nodeLeft || left > nodeRight) return INT_MAX;
+		if (left <= nodeLeft && nodeRight <= right) return tree[node];
+		int mid = (nodeLeft + nodeRight) / 2;
+		return min(query(left, right, node * 2, nodeLeft, mid),
+			query(left, right, node * 2 + 1, mid + 1, nodeRight));
+	}
+
+	int query(int left, int right) {
+		return query(left, right, 1, 0, N - 1);
+	}
+
+	int update(int idx, int val, int node, int nodeLeft, int nodeRight) {
+		if (idx < nodeLeft || idx > nodeRight) return tree[node];
+		if (nodeLeft == nodeRight) return tree[node] = val;
+		int mid = (nodeLeft + nodeRight) / 2;
+		return tree[node] = min(update(idx, val, node * 2, nodeLeft, mid),
+			update(idx, val, node * 2 + 1, mid + 1, nodeRight));
+	}
+
+	void update(int idx, int val) {
+		update(idx, val, 1, 0, N - 1);
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	graph.resize(N + 1);
+	for (int i = 0; i < N - 1; i++) {
+		cin >> a >> b;
+		graph[a].push_back(b);
+		graph[b].push_back(a);
+	}
+
+	order(1, 0);
+	RMQ X(seq);
+	cin >> M;
+	int x, y;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		x = locInSeq[a], y = locInSeq[b];
+		if (x > y) swap(x, y);
+		int LCA = idx2no[X.query(x, y)];
+		cout << LCA << '\n';
+	}
+}
