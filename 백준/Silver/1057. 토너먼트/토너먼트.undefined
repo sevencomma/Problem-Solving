@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	int N, a, b;
+	cin >> N >> a >> b;
+	int cnt = 1;
+
+	while (!((a % 2 && a + 1 == b) || (b % 2 && b + 1 == a))) {
+		a = (a + 1) / 2;
+		b = (b + 1) / 2;
+		cnt++;
+	}
+	cout << cnt;
+}
