@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int T, N;
+int edge[1001];
+bool visited[1001];
+
+bool dfs(int cur) {
+	if (visited[cur]) return false;
+	visited[cur] = true;
+	dfs(edge[cur]);
+	return true;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	while (T--) {
+		memset(edge, 0, sizeof(edge));
+		memset(visited, false, sizeof(visited));
+		cin >> N;
+		for (int i = 1; i <= N; i++)
+			cin >> edge[i];
+
+		int cnt = 0;
+		for (int i = 1; i <= N; i++)
+			if (dfs(i)) cnt++;
+		cout << cnt << '\n';
+	}
+}
