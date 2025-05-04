@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define INF INT_MAX
+
+int N, a, b, c;
+
+struct FenwickTree {
+	int M = 1000000;
+	vector<int> candyCnt;
+	vector<int> tree;
+
+	FenwickTree() {
+		candyCnt.resize(M + 2, 0);
+		tree.resize(M + 1, 0);
+	}
+
+	int sum(int pos) {
+		pos++;
+		int ret = 0;
+		while (pos > 0) {
+			ret += tree[pos];
+			pos &= (pos - 1);
+		}
+		return ret;
+	}
+
+	// query2
+	void add(int pos, int val) {
+		pos++;
+		candyCnt[pos] += val;
+		while (pos < tree.size()) {
+			tree[pos] += val;
+			pos += (pos & -pos);
+		}
+	}
+
+	int query1(int K) {
+		int low = 0, high = M - 1, mid, x;
+
+		while (low < high) {
+			mid = (low + high) / 2;
+			x = sum(mid);
+			if (K > x) low = mid + 1;
+			else high = mid;
+		}
+
+		add(high, -1);
+		return high + 1;
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	FenwickTree F;
+
+	for (int i = 0; i < N; i++) {
+		cin >> a;
+		if (a == 1) {
+			cin >> b;
+			cout << F.query1(b) << '\n';
+		}
+		else {
+			cin >> b >> c;
+			F.add(b - 1, c);
+		}
+	}
+}
