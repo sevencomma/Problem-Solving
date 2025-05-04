@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, R, a, b, Idx = 1;
+vector<int> graph[100001];
+int visited[100001];
+
+void dfs(int node) {
+	visited[node] = Idx++;
+
+	for (auto& next : graph[node])
+		if (!visited[next]) {
+			visited[next] = true;
+			dfs(next);
+		}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M >> R;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		graph[a].push_back(b);
+		graph[b].push_back(a);
+	}
+	for (int i = 1; i <= N; i++)
+		sort(graph[i].rbegin(), graph[i].rend());
+	dfs(R);
+	for (int i = 1; i <= N; i++)
+		cout << visited[i] << '\n';
+}
