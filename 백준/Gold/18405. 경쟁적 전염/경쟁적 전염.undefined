@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dy[4] = { -1, 0, 1, 0 };
+int dx[4] = { 0, -1, 0, 1 };
+struct point {
+	int y, x, cnt, val;
+};
+
+struct cmp {
+	bool operator() (point& a, point& b) {
+		if (a.cnt == b.cnt)
+			return a.val > b.val;
+		return a.cnt > b.cnt;
+	}
+};
+
+int N, K, S, X, Y;
+int board[201][201];
+bool is_in_range(int y, int x) {
+	return y >= 0 && y < N && x >= 0 && x < N;
+}
+
+void bfs(vector<point>& virus) {
+	priority_queue<point, vector<point>, cmp> q;
+	for (auto& it : virus)
+		q.push(it);
+
+	while (!q.empty()) {
+		point cur = q.top();
+		q.pop();
+
+		if (cur.cnt == S) break;
+
+		for (int i = 0; i < 4; i++) {
+			int ny = cur.y + dy[i];
+			int nx = cur.x + dx[i];
+			if (is_in_range(ny, nx) && board[ny][nx] == 0) {
+				board[ny][nx] = board[cur.y][cur.x];
+				q.push({ ny, nx, cur.cnt + 1, board[ny][nx]});
+			}
+		}
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> K;
+	vector<point> virus;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++) {
+			cin >> board[i][j];
+			if (board[i][j])
+				virus.push_back({ i, j, 0, board[i][j]});
+		}
+	cin >> S >> X >> Y;
+	bfs(virus);
+	cout << board[X - 1][Y - 1];
+}
