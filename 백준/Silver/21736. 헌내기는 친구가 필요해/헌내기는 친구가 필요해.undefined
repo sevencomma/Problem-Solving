@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dy[4] = { -1, 0, 1, 0 };
+int dx[4] = { 0, -1, 0, 1 };
+
+int N, M, sy, sx;
+char board[600][600];
+bool visited[600][600];
+
+bool is_in_range(int y, int x) {
+	return y >= 0 && y < N && x >= 0 && x < M;
+}
+
+int dfs(int y, int x) {
+	visited[y][x] = true;
+	int ret = 0;
+	if (board[y][x] == 'P') ret++;
+
+	for (int i = 0; i < 4; i++) {
+		int ny = y + dy[i];
+		int nx = x + dx[i];
+		if (is_in_range(ny, nx) && !visited[ny][nx] && board[ny][nx] != 'X') {
+			visited[ny][nx] = true;
+			ret += dfs(ny, nx);
+		}
+	}
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++) {
+			cin >> board[i][j];
+			if (board[i][j] == 'I')
+				sy = i, sx = j;
+		}
+	int res = dfs(sy, sx);
+	if (res == 0) cout << "TT";
+	else cout << res;
+}
