@@ -1,25 +1,17 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-
+#include <bits/stdc++.h>
 using namespace std;
 
 vector<int> solution(vector<int> numbers) {
-    vector<int> answer;
-
-    sort(numbers.begin(), numbers.end());
-
-    for (int i = 0; i < numbers.size(); i++) {
-        for (int j = i + 1; j < numbers.size(); j++) {
-            if (i == j)
-                continue;
-            answer.push_back(numbers[i] + numbers[j]); 
-        }
-    }
-
-    sort(answer.begin(), answer.end());
-    answer.erase(unique(answer.begin(), answer.end()), answer.end());
-
-    return answer;
+    map<int, bool> X;
+    
+    int n = numbers.size();
+    
+    for (int i = 0; i < n; i++)
+        for (int j = i + 1; j < n; j++)
+            X[numbers[i] + numbers[j]] = true;
+    
+    vector<int> ret;
+    for(auto& it : X)
+        ret.push_back(it.first);
+    return ret;
 }
