@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+typedef long long ll;
+int N, x;
+
+struct FenwickTree {
+	int N;
+	vector<int> Tree; // Tree[x] : x 번호까지의 케이블 누적합
+	
+	FenwickTree(int n) : Tree(n + 1, 0) {}
+
+	ll sum(int pos) {
+		pos++;
+		ll ret = 0;
+		while (pos > 0) {
+			ret += Tree[pos];
+			pos &= (pos - 1);
+		}
+		return ret;
+	}
+
+	void add(int pos, int val) {
+		pos++;
+		while (pos < Tree.size()) {
+			Tree[pos] += val;
+			pos += (pos & -pos);
+		}
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	vector<int> A(N);
+	unordered_map<int, int> B;
+	for (int i = 0; i < N; i++) cin >> A[i];
+	for (int i = 0; i < N; i++) {
+		cin >> x;
+		B[x] = i;
+	}
+	
+	FenwickTree F(N + 1);
+	ll res = 0;
+	for (int i = 0; i < N; i++) {
+		res += F.sum(N) - F.sum(B[A[i]]);
+		F.add(B[A[i]], 1);
+	}
+	cout << res;
+}
