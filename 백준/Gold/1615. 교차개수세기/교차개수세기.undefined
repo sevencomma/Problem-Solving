@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, a, b;
+vector<int> edge[2001];
+
+struct FenwickTree {
+	int n;
+	vector<int> tree;
+	FenwickTree(int n) {
+		this->n = n + 1;
+		tree.resize(n + 1);
+	}
+
+	int sum(int pos) {
+		pos++;
+		int ret = 0;
+		while (pos > 0) {
+			ret += tree[pos];
+			pos &= (pos - 1);
+		}
+		return ret;
+	}
+
+	void add(int pos, int val) {
+		pos++;
+		while (pos < n) {
+			tree[pos] += val;
+			pos += (pos & -pos);
+		}
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		edge[a].push_back(b);
+	}
+	for (int i = 1; i <= N; i++)
+		sort(edge[i].begin(), edge[i].end());
+
+	FenwickTree F(N + 1);
+	long long ret = 0;
+	for (int i = 1; i <= N; i++) {
+		for (auto& e : edge[i]) {
+			ret += F.sum(N) - F.sum(e - 1);
+			F.add(e - 1, 1);
+		}
+	}
+	cout << ret;
+}
