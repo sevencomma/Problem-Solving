@@ -1,0 +1,90 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MAX_N 40001
+
+int N, M, a, b, c, x, y, root = 1, Idx;
+vector<pair<int, int>> graph[MAX_N];
+vector<int> seq;
+int Idx2no[MAX_N], no2Idx[MAX_N], locInSeq[MAX_N], Parent[MAX_N];
+int Dist[MAX_N]; // root 1 기준
+bool visited[MAX_N];
+
+void order(int cur, int prev, int d) {
+	visited[cur] = true;
+	Dist[cur] = d;
+	Idx2no[Idx] = cur;
+	no2Idx[cur] = Idx++;
+	Parent[cur] = prev;
+	locInSeq[cur] = seq.size();
+	seq.push_back(no2Idx[cur]);
+
+	for (auto& next : graph[cur]) {
+		if (visited[next.first]) continue;
+		order(next.first, cur, d + next.second);
+		seq.push_back(no2Idx[cur]);
+	}
+}
+
+int getDistance(int start, int end) { // end is parent
+	return Dist[start] - Dist[end];
+}
+
+struct SegmentTree {
+	int N;
+	vector<int> tree;
+	SegmentTree(vector<int>& arr) {
+		N = arr.size();
+		int x = 2;
+		while (x <= N) x *= 2;
+		tree.resize(x * 2);
+		init(arr, 0, N - 1, 1);
+	}
+
+	int init(vector<int>& arr, int l, int r, int node) {
+		if (l == r) return tree[node] = arr[l];
+		int mid = (l + r) / 2;
+		return tree[node] = min(
+			init(arr, l, mid, node * 2),
+			init(arr, mid + 1, r, node * 2 + 1)
+		);
+	}
+
+	int query(int l, int r, int node, int nodeLeft, int nodeRight) {
+		if (r < nodeLeft || l > nodeRight) return INT_MAX;
+		if (l <= nodeLeft && nodeRight <= r) return tree[node];
+		int mid = (nodeLeft + nodeRight) / 2;
+		return min(
+			query(l, r, node * 2, nodeLeft, mid),
+			query(l, r, node * 2 + 1, mid + 1, nodeRight)
+		);
+	}
+
+	int query(int l, int r) {
+		return query(l, r, 1, 0, N - 1);
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	
+	for (int i = 0; i < N - 1; i++) {
+		cin >> a >> b >> c;
+		graph[a].push_back({b, c});
+		graph[b].push_back({a, c});
+	}
+
+	order(root, 0, 0);
+	SegmentTree T(seq);
+	
+	cin >> M;
+	for (int i = 0; i < M; i++) {
+		cin >> x >> y;
+		a = locInSeq[x], b = locInSeq[y];
+		if (a > b) swap(a, b);
+		int lca = Idx2no[T.query(a, b)];
+		cout << getDistance(x, lca) + getDistance(y, lca) << '\n';
+	}
+}
