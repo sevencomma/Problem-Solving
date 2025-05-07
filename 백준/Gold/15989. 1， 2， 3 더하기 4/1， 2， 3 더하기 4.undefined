@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int T, x, cache[10001];
+
+int dp(int x) {
+	int& ret = cache[x];
+	if (ret != -1) return ret;
+	return ret = dp(x - 3) + x / 2 + 1;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	memset(cache, -1, sizeof(cache));
+	cache[0] = 0; cache[1] = 1; cache[2] = 2; cache[3] = 3;
+	while (T--) {
+		cin >> x;
+		cout << dp(x) << '\n';
+	}
+}
