@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+typedef long long ll;
+int T, N, M;
+ll a[1000], b[1000];
+ll sumA[1000], sumB[1000];
+
+unordered_map<ll, int> A;
+unordered_map<ll, int> B;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T >> N;
+	for (int i = 0; i < N; i++) cin >> a[i];
+	cin >> M;
+	for (int i = 0; i < M; i++) cin >> b[i];
+
+	sumA[0] = a[0];
+	for (int i = 1; i < N; i++)
+		sumA[i] = sumA[i - 1] + a[i];
+	sumB[0] = b[0];
+	for (int i = 1; i < M; i++)
+		sumB[i] = sumB[i - 1] + b[i];
+
+	for (int i = 0; i < N; i++)
+		for (int j = i; j < N; j++) {
+			if (i == 0) A[sumA[j]]++;
+			else A[sumA[j] - sumA[i - 1]]++;
+		}
+
+	for (int i = 0; i < M; i++)
+		for (int j = i; j < M; j++) {
+			if (i == 0) B[sumB[j]]++;
+			else B[sumB[j] - sumB[i - 1]]++;
+		}
+
+
+	ll res = 0;
+	for (auto& it : A) {
+		ll x = B[T - it.first];
+		res += x * it.second;
+	}
+	cout << res;
+}
