@@ -1,12 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int cache[15][15];
+long long cache[15][15];
 int N, M, K;
 
 int main(void) {
 	cin >> N >> M >> K;
-	for (int i = 1; i < N; i++)
+	for (int i = 0; i < N; i++)
 		cache[i][0] = 1;
 	for (int i = 1; i < M; i++)
 		cache[0][i] = 1;
@@ -19,8 +19,8 @@ int main(void) {
 		cout << cache[N - 1][M - 1];
 	}
 	else {
-		int y = K / M + 1;
-		int x = K % M;
-		cout << (long long)cache[y - 1][x - 1] * cache[N - y][M - x];
+		int y = (K % M == 0) ? K / M : K / M + 1;
+		int x = (K % M == 0) ? M : K % M;
+		cout << cache[y - 1][x - 1] * cache[N - y][M - x];
 	}
 }
