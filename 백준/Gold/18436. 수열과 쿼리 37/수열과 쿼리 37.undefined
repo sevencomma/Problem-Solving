@@ -1,0 +1,76 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, a, b, c;
+
+struct SegmentTree {
+	int N;
+	vector<int> tree; // val, oddCnt
+
+	SegmentTree(vector<int>& arr) {
+		N = arr.size();
+		int x = 2;
+		while (x <= N) x *= 2;
+		tree.resize(x * 2);
+		init(arr, 0, N - 1, 1);
+	}
+
+	int init(vector<int>& arr, int left, int right, int node) {
+		if (left == right) return tree[node] = arr[left];
+		int mid = (left + right) / 2;
+		return tree[node] = init(arr, left, mid, node * 2) +
+			init(arr, mid + 1, right, node * 2 + 1);
+	}
+
+	int query(int left, int right, int node, int leftNode, int rightNode) {
+		if (right < leftNode || left > rightNode) return 0;
+		if (left <= leftNode && rightNode <= right) return tree[node];
+
+		int mid = (leftNode + rightNode) / 2;
+		return query(left, right, node * 2, leftNode, mid) +
+			query(left, right, node * 2 + 1, mid + 1, rightNode);
+	}
+
+	int query(int left, int right) {
+		return query(left, right, 1, 0, N - 1);
+	}
+
+	int update(int idx, int val, int node, int leftNode, int rightNode) {
+		if (idx < leftNode || idx > rightNode) return tree[node];
+		if (leftNode == rightNode) return tree[node] = val;
+
+		int mid = (leftNode + rightNode) / 2;
+		return tree[node] = update(idx, val, node * 2, leftNode, mid) +
+			update(idx, val, node * 2 + 1, mid + 1, rightNode);
+	}
+
+	int update(int idx, int val) {
+		return update(idx, val, 1, 0, N - 1);
+	}
+};
+
+int main(void) {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	vector<int> arr(N);
+	for (int i = 0; i < N; i++) {
+		cin >> arr[i];
+		arr[i] %= 2;
+	}
+	SegmentTree T(arr);
+	cin >> M;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b >> c;
+		if (a == 1) {
+			if (arr[b - 1] == c % 2) continue;
+			T.update(b - 1, c % 2);
+			arr[b - 1] = c % 2;
+		}
+		else if (a == 3)
+			cout << T.query(b - 1, c - 1) << '\n';
+		else
+			cout << c - b + 1 - T.query(b - 1, c - 1) << '\n';
+	}
+}
