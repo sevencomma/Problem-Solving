@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int cache[15][15];
+int N, M, K;
+
+int main(void) {
+	cin >> N >> M >> K;
+	for (int i = 1; i < N; i++)
+		cache[i][0] = 1;
+	for (int i = 1; i < M; i++)
+		cache[0][i] = 1;
+
+	for (int i = 1; i < N; i++)
+		for (int j = 1; j < M; j++)
+			cache[i][j] = cache[i - 1][j] + cache[i][j - 1];
+
+	if (K == 0) {
+		cout << cache[N - 1][M - 1];
+	}
+	else {
+		int y = K / M + 1;
+		int x = K % M;
+		cout << (long long)cache[y - 1][x - 1] * cache[N - y][M - x];
+	}
+}
