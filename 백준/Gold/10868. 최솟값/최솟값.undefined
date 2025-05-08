@@ -60,7 +60,7 @@ struct RMQ {
 };
 
 int main(void) {
-	cin.tie(NULL);
+	cin.tie(NULL); cout.tie(NULL);
 	ios_base::sync_with_stdio(false);
 	cin >> N >> M;
 	seq.resize(N);
