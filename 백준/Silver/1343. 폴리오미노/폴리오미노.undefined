@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string poly;
+
+int main(void) {
+	cin >> poly;
+
+	int N = poly.size();
+	for (int i = 0; i <= N - 4; i++) {
+		bool A = true;
+		for (int j = i; j < i + 4; j++)
+			if (poly[j] != 'X') {
+				A = false;
+				break;
+			}
+
+		if (A)
+			for (int j = i; j < i + 4; j++)
+				poly[j] = 'A';
+	}
+
+	for (int i = 0; i <= N - 2; i++) {
+		bool B = true;
+		for (int j = i; j < i + 2; j++)
+			if (poly[j] != 'X') {
+				B = false;
+				break;
+			}
+
+		if (B)
+			for (int j = i; j < i + 2; j++)
+				poly[j] = 'B';
+	}
+	for (int i = 0; i < N; i++)
+		if (poly[i] == 'X') {
+			cout << -1;
+			return 0;
+		}
+	cout << poly;
+}
