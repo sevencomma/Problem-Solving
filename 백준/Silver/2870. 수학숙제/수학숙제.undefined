@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s;
+vector<string> res;
+int N;
+
+bool compare(string a, string b) {
+	int n = a.length(), m = b.length();
+	if (n != m) return n < m;
+	return a < b;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> s;
+		string num = "";
+
+		for (int i = 0; i < s.length(); i++) {
+			if (s[i] >= '0' && s[i] <= '9') {
+				num += s[i];
+			}
+			else {
+				if (num != "") {
+					while (num != "0" && num[0] == '0') {
+						num = num.substr(1);
+					}
+					res.push_back(num);
+					num = "";
+				}
+			}
+		}
+		if (num != "") {
+			while (num != "0" && num[0] == '0') {
+				num = num.substr(1);
+			}
+			res.push_back(num);
+		}
+	}
+	sort(res.begin(), res.end(), compare);
+	for (auto& it : res)
+		cout << it << '\n';
+}
