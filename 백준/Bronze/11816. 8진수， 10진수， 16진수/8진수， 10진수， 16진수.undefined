@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s;
+
+int main(void) {
+	cin >> s;
+	if (s[0] != '0')
+		cout << s;
+	else {
+		if (s[1] == 'x') {
+			int num = 0;
+			int idx = s.length() - 1;
+			int k = 0;
+			for (int i = idx; i >= 2; i--) {
+				if (s[i] <= '9')
+					num += pow(16, k++) * (s[i] - '0');
+				else
+					num += pow(16, k++) * (s[i] - 'a' + 10);
+			}
+			cout << num;
+		}
+		else {
+			int num = 0;
+			int idx = s.length() - 1;
+			int k = 0;
+			for (int i = idx; i >= 1; i--) {
+				num += pow(8, k++) * (s[i] - '0');
+			}
+			cout << num;
+		}
+	}
+}
