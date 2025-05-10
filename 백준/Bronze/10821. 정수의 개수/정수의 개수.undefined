@@ -1,0 +1,17 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s;
+int res;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> s;
+	int idx = 0;
+	while ((idx = s.find(",", idx)) != string::npos) {
+		res++;
+		idx++;
+	}
+	cout << res + 1;
+}
