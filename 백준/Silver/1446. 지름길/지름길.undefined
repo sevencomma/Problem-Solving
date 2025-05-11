@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, D, a, b, c;
+vector<pair<int, int>> graph[10001];
+int d[10001];
+
+int dijkstra(int begin, int end) {
+	for (int i = begin; i <= end; i++)
+		d[i] = INT_MAX;
+	queue<pair<int, int>> q;
+	q.push({ begin, 0 });
+	d[begin] = 0;
+
+	int cur, w;
+	while (!q.empty()) {
+		tie(cur, w) = q.front();
+		q.pop();
+		if (d[cur] < w) continue;
+
+		for (auto& next : graph[cur]) {
+			if (d[next.first] > w + next.second) {
+				d[next.first] = w + next.second;
+				q.push({ next.first, d[next.first] });
+			}
+		}
+	}
+	return d[end];
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> D;
+	for (int i = 0; i < N; i++) {
+		cin >> a >> b >> c;
+		if (b - a > c)
+			graph[a].push_back({ b, c });
+	}
+	for (int i = 0; i < D; i++)
+		graph[i].push_back({ i + 1, 1 });
+	cout << dijkstra(0, D);
+}
