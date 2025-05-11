@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, K;
+int startIdx, MOD;
+vector<int> robot;
+bool belt_empty[200];
+int belt[200];
+
+bool is_break() {
+	int cnt = 0;
+	for (int i = 0; i < MOD; i++)
+		if (belt[i] == 0) {
+			cnt++;
+			if (cnt == K) return true;
+		}
+	return false;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> K;
+	MOD = N * 2;
+	memset(belt_empty, true, sizeof(belt_empty));
+	for (int i = 0; i < MOD; i++)
+		cin >> belt[i];
+
+	int stage = 0, robotIdx = 0;
+	while (1) {
+		stage++;
+
+		startIdx = (startIdx + MOD - 1) % MOD;
+
+		for (int i = robotIdx; i < robot.size(); i++) {
+			if ((startIdx + N - 1) % MOD == robot[i]) {
+				robotIdx++;
+				belt_empty[robot[i]] = true;
+				continue;
+			}
+			int next = (robot[i] + 1) % MOD;
+			if (belt[next] > 0 && belt_empty[next]) {
+				belt_empty[robot[i]] = true;
+				robot[i] = next;
+				belt[next]--;
+				if ((startIdx + N - 1) % MOD == robot[i]) {
+					robotIdx++;
+					continue;
+				}
+				belt_empty[next] = false;
+			}
+		}
+
+		if (belt[startIdx] > 0) {
+			robot.push_back(startIdx);
+			belt[startIdx]--;
+			belt_empty[startIdx] = false;
+		}
+
+		if (is_break())
+			break;
+	}
+	cout << stage;
+}
