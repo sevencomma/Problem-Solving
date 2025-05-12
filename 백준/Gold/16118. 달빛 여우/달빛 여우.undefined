@@ -79,8 +79,6 @@ int main(void) {
 	int ans = 0;
 	for (int i = 1; i <= N; i++)
 		if (fox[i] < min(wolf[i][0], wolf[i][1])) {
-			if (min(wolf[i][0], wolf[i][1]) - fox[i] <= numeric_limits<double>::epsilon())
-				continue;
 			ans++;
 		}
 	cout << ans;
