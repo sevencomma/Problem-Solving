@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+int d[1001], A[1000];
+
+int dijkstra(int start) {
+	queue<pair<int, int>> q;
+	q.push({ start, 0 });
+	d[start] = 0;
+
+	int cur, cnt;
+	while (!q.empty()) {
+		tie(cur, cnt) = q.front();
+		q.pop();
+
+		if (d[cur] < cnt) continue;
+
+		for (int i = 1; i <= A[cur]; i++) {
+			int next = cur + i;
+			if (next >= N) continue;
+			if (d[next] == -1 || d[next] > cnt + 1) {
+				d[next] = cnt + 1;
+				q.push({ next, cnt + 1 });
+			}
+		}
+	}
+	return d[N - 1];
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	memset(d, -1, sizeof(d));
+	for (int i = 0; i < N; i++)
+		cin >> A[i];
+	cout << dijkstra(0);
+}
