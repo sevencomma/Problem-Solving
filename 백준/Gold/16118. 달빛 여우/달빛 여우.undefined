@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = INT_MAX;
+int N, M, a, b, c;
+
+vector<pair<int, double>> graph[4001];
+double fox[4001];
+double wolf[4001][2]; // [pos] [{slow, fast}] // wolf[pos][1] : 직전에 slow로 왔음
+
+struct item {
+	int pos;
+	double weight;
+	bool fast;	// fast 라면 절반, !fast라면 2배의 가중치
+};
+
+void dijkstraWolf(int start) {
+	queue<item> q;
+	q.push({ start, 0, true });	// true : 다음 스텝이 fast임.
+	wolf[start][0] = 0;
+
+	while (!q.empty()) {
+		item cur = q.front();
+		q.pop();
+
+		if (wolf[cur.pos][!cur.fast] < cur.weight) continue;
+
+		if (cur.fast) {
+			for (auto& next : graph[cur.pos])
+				if (wolf[next.first][1] > cur.weight + next.second / 2) {
+					wolf[next.first][1] = cur.weight + next.second / 2;
+					q.push({ next.first, wolf[next.first][1], false});
+				}
+		}
+		else {
+			for (auto& next : graph[cur.pos]) {
+				if (wolf[next.first][0] > cur.weight + next.second * 2) {
+					wolf[next.first][0] = cur.weight + next.second * 2;
+					q.push({ next.first, wolf[next.first][0], true });
+				}
+			}
+		}
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i <= N; i++)
+		fox[i] = wolf[i][0] = wolf[i][1] = INF;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b >> c;
+		graph[a].push_back({ b, c });
+		graph[b].push_back({ a, c });
+	}
+	
+	queue<pair<int, int>> q;
+	q.push({ 1, 0 });
+	fox[1] = 0;
+
+	int cur, w;
+	while (!q.empty()) {
+		tie(cur, w) = q.front();
+		q.pop();
+
+		if (fox[cur] < w) continue;
+
+		for (auto& next : graph[cur]) {
+			if (fox[next.first] > w + next.second) {
+				fox[next.first] = w + next.second;
+				q.push({ next.first, fox[next.first] });
+			}
+		}
+	}
+
+	dijkstraWolf(1);
+
+	int ans = 0;
+	for (int i = 1; i <= N; i++)
+		if (fox[i] < min(wolf[i][0], wolf[i][1])) {
+			if (min(wolf[i][0], wolf[i][1]) - fox[i] <= numeric_limits<double>::epsilon())
+				continue;
+			ans++;
+		}
+	cout << ans;
+}
