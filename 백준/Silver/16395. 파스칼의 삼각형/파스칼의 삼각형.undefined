@@ -1,0 +1,18 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, K;
+int cache[31][31];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> K;
+	cache[0][0] = 1;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j <= i; j++) {
+			cache[i + 1][j] += cache[i][j];
+			cache[i + 1][j + 1] += cache[i][j];
+		}
+	cout << cache[N - 1][K - 1];
+}
