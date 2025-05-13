@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string A, B, C;
+
+int cache[101][101][101];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> A >> B >> C;
+
+	int N = A.size(), M = B.size(), K = C.size();
+
+	for (int i = 1; i <= N; i++)
+		for (int j = 1; j <= M; j++)
+			for (int k = 1; k <= K; k++) {
+				if (A[i - 1] == B[j - 1] && B[j - 1] == C[k - 1])
+					cache[i][j][k] = cache[i - 1][j - 1][k - 1] + 1;
+				else {
+					int tmp = 0;
+					for (int a : {i - 1, i})
+						for (int b : {j - 1, j})
+							for (int c : {k - 1, k})
+								tmp = max(tmp, cache[a][b][c]);
+					cache[i][j][k] = tmp;
+				}
+			}
+	cout << cache[N][M][K];
+}
