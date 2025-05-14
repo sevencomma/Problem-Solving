@@ -1,0 +1,89 @@
+#include <bits/stdc++.h>
+#include <unordered_set>
+using namespace std;
+
+#define MAX_N 10001
+
+int N, a, b;
+int weight[MAX_N];
+vector<int> graph[MAX_N];
+int parent[MAX_N];
+bool visited[MAX_N];
+int cache[MAX_N][2];
+
+void dfs(int cur) {
+	visited[cur] = true;
+
+	for (auto& next : graph[cur]) {
+		if (visited[next]) continue;
+		parent[next] = cur;
+		dfs(next);
+	}
+}
+
+int dp(int cur, bool use) {
+	int& ret = cache[cur][use];
+	if (ret != -1) return ret;
+	ret = 0;
+	
+	if (use) {
+		for (auto& next : graph[cur]) {
+			if (parent[cur] == next) continue;
+			ret += dp(next, false);
+		}
+		ret += weight[cur];
+	}
+	else {
+		for (auto& next : graph[cur]) {
+			if (parent[cur] == next) continue;
+			ret += max(dp(next, false), dp(next, true));
+		}
+	}
+	return ret;
+}
+
+vector<int> ans;
+void construct(int cur, bool use) {
+	int& val = cache[cur][use];
+
+	if (use) {
+		ans.push_back(cur);
+		for (auto& next : graph[cur]) {
+			if (parent[cur] == next) continue;
+			construct(next, false);
+		}
+	}
+	else {
+		for (auto& next : graph[cur]) {
+			if (parent[cur] == next) continue;
+			if (cache[next][0] < cache[next][1])
+				construct(next, 1);
+			else
+				construct(next, 0);
+		}
+	}
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 1; i <= N; i++)
+		cin >> weight[i];
+	for (int i = 0; i < N - 1; i++) {
+		cin >> a >> b;
+		graph[a].push_back(b);
+		graph[b].push_back(a);
+	}
+	memset(cache, -1, sizeof(cache));
+	dfs(1); // root is 1 (supp)
+	int res = max(dp(1, false), dp(1, true));
+	cout << res << '\n';
+	if (cache[1][0] < cache[1][1])
+		construct(1, true);
+	else
+		construct(1, false);
+	sort(ans.begin(), ans.end());
+	for (auto& it : ans)
+		cout << it << ' ';
+}
