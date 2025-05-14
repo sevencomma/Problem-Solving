@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MAX_N 1000001
+
+int N, a, b;
+vector<int> graph[MAX_N];
+int cache[MAX_N][2];
+int parent[MAX_N];
+bool visited[MAX_N];
+
+void dfs(int cur) {
+	visited[cur] = true;
+	
+	for (auto& next : graph[cur]) {
+		if (visited[next]) continue;
+		parent[next] = cur;
+		dfs(next);
+	}
+}
+
+int dp(int cur, bool use) {
+	int& ret = cache[cur][use];
+	if (ret != -1) return ret;
+	ret = 0;
+	if (use) {
+		for (auto& next : graph[cur]) {
+			if (next == parent[cur]) continue;
+			ret += min(dp(next, true), dp(next, false));
+		}
+		ret++;
+	}
+	else {
+		for (auto& next : graph[cur]) {
+			if (next == parent[cur]) continue;
+			ret += dp(next, true);
+		}
+	}
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N - 1; i++) {
+		cin >> a >> b;
+		graph[a].push_back(b);
+		graph[b].push_back(a);
+	}
+	memset(cache, -1, sizeof(cache));
+	dfs(1);
+	// 1번이 루트라고 가정
+	int res = min(dp(1, 0), dp(1, 1));
+	cout << res;
+}
