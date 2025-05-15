@@ -1,0 +1,9 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int H, W, N, M;
+
+int main(void) {
+	cin >> H >> W >> N >> M;
+	cout << (int)ceil((double)H / (N + 1)) * (int)ceil((double)W / (M + 1));
+}
