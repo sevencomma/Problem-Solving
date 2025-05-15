@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int P, T;
+
+void swap(int& a, int& b) {
+	int t = a;
+	a = b;
+	b = t;
+}
+
+int insertionSort(vector<int> arr) {
+	int cnt = 0, N = arr.size();
+
+	for (int i = 1; i < N; i++) {
+		int j = i;
+		while (j > 0 && arr[j] < arr[j - 1]) {
+			swap(arr[j - 1], arr[j]);
+			j--;
+			cnt++;
+		}
+	}
+	return cnt;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> P;
+	while (P--) {
+		cin >> T;
+		vector<int> seq(20);
+		for (int i = 0; i < 20; i++)
+			cin >> seq[i];
+		int cnt = insertionSort(seq);
+		cout << T << ' ' << cnt << '\n';
+	}
+}
