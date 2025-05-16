@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool isVowel(char c) {
+	switch (c) {
+	case 'a':
+	case 'e':
+	case 'i':
+	case 'o':
+	case 'u':
+		return true;
+	}
+	return false;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+
+	string S;
+
+	while (1) {
+		cin >> S;
+		if (S == "end") break;
+
+		int n = S.length();
+		bool can = false;
+
+		for (int i = 0; i < n; i++)
+			if (isVowel(S[i])) {
+				can = true;
+				break;
+			}
+		
+		if (can) {
+			int cnt = 1;
+			bool prevIsVowel = isVowel(S[0]);
+			for (int i = 1; i < n; i++) {
+				bool curIsVowel = isVowel(S[i]);
+				if (prevIsVowel != curIsVowel) {
+					cnt = 1;
+					prevIsVowel = curIsVowel;
+				}
+				else {
+					cnt++;
+					if (cnt == 3) {
+						can = false;
+						break;
+					}
+				}
+			}
+		}
+
+		if (can) {
+			char prevCh = S[0];
+			for (int i = 1; i < n; i++) {
+				if (prevCh == S[i]) {
+					if (S[i] == 'e' || S[i] == 'o') continue;
+					can = false;
+					break;
+				}
+				else
+					prevCh = S[i];
+			}
+		}
+
+		cout << "<" << S << "> is ";
+		if (can)
+			cout << "acceptable.\n";
+		else
+			cout << "not acceptable.\n";
+	}
+}
