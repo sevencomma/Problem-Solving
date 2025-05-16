@@ -1,0 +1,24 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> s;
+
+	int sum = 0, cnt = 0;;
+	while (s.length() != 1) {
+		sum = 0;
+		for (auto& it : s)
+			sum += (it - '0');
+
+		s = to_string(sum);
+		cnt++;
+	}
+	cout << cnt << '\n';
+	if ((s[0] - '0') % 3 == 0)
+		cout << "YES";
+	else cout << "NO";
+}
