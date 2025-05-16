@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+string res;
+bool fin;
+
+void solve(string cur, int cnt) {
+	if (fin) return;
+	int n = cur.length();
+	for (int i = 1; i <= n / 2; i++)
+		if (cur.substr(n - i, i) == cur.substr(n - 2 * i, i))
+			return;
+	if (cnt == N) {
+		res = cur;
+		fin = true;
+		return;
+	}
+	for (string next : {"1", "2", "3"})
+		solve(cur + next, cnt + 1);
+}
+
+int main(void) {
+	cin >> N;
+	solve("", 0);
+	cout << res;
+}
