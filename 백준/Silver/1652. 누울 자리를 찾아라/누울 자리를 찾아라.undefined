@@ -1,0 +1,59 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+char board[100][100];
+bool r[100][100];
+bool c[100][100];
+
+bool is_in_range(int y, int x) {
+	return y >= 0 && y < N && x >= 0 && x < N;
+}
+
+bool isOk(int y, int x) {
+	if (is_in_range(y, x) && board[y][x] != 'X')
+		return true;
+	return false;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> board[i][j];
+
+	int R = 0, C = 0;
+
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++) {
+			int ny = i;
+			int nx = j + 1;
+
+			if (isOk(i, j) && isOk(ny, nx) && !r[i][j] && !r[ny][nx]) {
+				R++;
+				r[i][j] = true;
+
+				while (isOk(ny, nx)) {
+					r[ny][nx] = true;
+					nx++;
+				}
+			}
+
+			ny = i + 1;
+			nx = j;
+
+			if (isOk(i, j) && isOk(ny, nx) && !c[i][j] && !c[ny][nx]) {
+				C++;
+				c[i][j] = true;
+
+				while (isOk(ny, nx)) {
+					c[ny][nx] = true;
+					ny++;
+				}
+			}
+		}
+
+	cout << R << ' ' << C;
+}
