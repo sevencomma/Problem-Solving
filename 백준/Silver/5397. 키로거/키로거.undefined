@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int T;
+string s;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+
+	while (T--) {
+		cin >> s;
+		int n = s.size();
+		list<char> password;
+
+		auto it = password.begin();
+		
+		for (int i = 0; i < n; i++) {
+			if (s[i] == '<') {
+				if (it == password.begin()) continue;
+				it = prev(it);
+			}
+			else if (s[i] == '>') {
+				if (it == password.end()) continue;
+				it = next(it);
+			}
+			else if (s[i] == '-') {
+				if (it == password.begin()) continue;
+				auto to_delete = prev(it);
+				password.erase(to_delete);
+			}
+			else {
+				password.insert(it, s[i]);
+			}
+		}
+		
+		for (auto& it : password)
+			cout << it;
+		cout << '\n';
+	}
+}
