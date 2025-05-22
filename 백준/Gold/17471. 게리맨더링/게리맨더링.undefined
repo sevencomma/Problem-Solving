@@ -1,0 +1,97 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, m, x, RES = INT_MAX;
+int val[10];
+bool graph[10][10];
+bool isTeam[10];
+
+bool canTeam() {
+	vector<int> A, B;
+	for (int i = 0; i < N; i++)
+		if (isTeam[i]) A.push_back(i);
+		else B.push_back(i);
+
+	queue<int> a, b;
+	vector<bool> visited(N, false);
+	
+	if (A.size() != 0) {
+		a.push(A[0]);
+		visited[A[0]] = true;
+
+		while (!a.empty()) {
+			int cur = a.front();
+			a.pop();
+
+			for (int i = 0; i < N; i++) {
+				if (graph[cur][i] && isTeam[i] && !visited[i]) {
+					a.push(i);
+					visited[i] = true;
+				}
+			}
+		}
+	}
+	if (B.size() != 0) {
+		b.push(B[0]);
+		visited[B[0]] = true;
+		while (!b.empty()) {
+			int cur = b.front();
+			b.pop();
+
+			for (int i = 0; i < N; i++) {
+				if (graph[cur][i] && !isTeam[i] && !visited[i]) {
+					b.push(i);
+					visited[i] = true;
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+		if (!visited[i])
+			return false;
+	return true;
+}
+
+int getScoreDiff() {
+	int A = 0, B = 0;
+	for (int i = 0; i < N; i++)
+		if (isTeam[i]) A += val[i];
+		else B += val[i];
+
+	return abs(A - B);
+}
+
+void back_tracking(int idx) {
+	if (idx == N) {
+		if (!canTeam()) return;
+		RES = min(RES, getScoreDiff());
+		return;
+	}
+	isTeam[idx + 1] = true;
+	back_tracking(idx + 1);
+	isTeam[idx + 1] = false;
+	back_tracking(idx + 1);
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		cin >> val[i];
+	for (int i = 0; i < N; i++) {
+		cin >> m;
+		for (int j = 0; j < m; j++) {
+			cin >> x;
+			graph[i][x - 1] = 1;
+		}
+	}
+
+	isTeam[0] = 1;
+	back_tracking(0);
+	if (RES == INT_MAX)
+		cout << -1;
+	else
+		cout << RES;
+}
