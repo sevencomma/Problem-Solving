@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+ll cost, a, b, c;
+int N, M, x;
+priority_queue<ll, vector<ll>, greater<ll>> q;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < N; i++) {
+		cin >> x;
+		q.push(x);
+	}
+	
+	while (M--) {
+		a = q.top(); q.pop();
+		b = q.top(); q.pop();
+		c = a + b;
+		q.push(c);
+		q.push(c);
+	}
+	while (!q.empty()) {
+		cost += q.top();
+		q.pop();
+	}
+	cout << cost;
+}
