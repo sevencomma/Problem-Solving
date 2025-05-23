@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dy[4] = { -1, 0, 1, 0 };
+int dx[4] = { 0, -1, 0, 1 };
+int board[5][5];
+bool is_in_range(int y, int x) {
+	return y >= 0 && y < 5 && x >= 0 && x < 5;
+}
+
+set<int> nums;
+
+void dfs(int y, int x, int depth, int num) {
+	if (depth == 6) {
+		nums.insert(num);
+		return;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		int ny = y + dy[i];
+		int nx = x + dx[i];
+
+		if (!is_in_range(ny, nx)) continue;
+		dfs(ny, nx, depth + 1, num * 10 + board[ny][nx]);
+	}
+}
+
+int main(void) {
+	for (int i = 0; i < 5; i++)
+		for (int j = 0; j < 5; j++)
+			cin >> board[i][j];
+
+	for (int i = 0; i < 5; i++)
+		for (int j = 0; j < 5; j++)
+			dfs(i, j, 1, board[i][j]);
+	cout << nums.size();
+}
