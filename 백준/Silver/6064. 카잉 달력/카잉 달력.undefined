@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int T, N, M, X, Y;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	while (T--) {
+		cin >> M >> N >> X >> Y;
+		int cur = 1;
+		
+		int a = 1, b = 1;
+		bool end = false;
+
+		while (b != Y) {
+			cur++;
+			b++;
+			a = (a < M) ? a + 1 : 1;
+		}
+
+		while (cur <= N * M) {
+			if (a == X) {
+				end = true;
+				cout << cur << '\n';
+				break;
+			}
+			cur += N;
+			a = (a + N);
+			while (a > M) {
+				a -= M;
+				a + 1;
+			}
+		}
+
+		if (!end)
+			cout << -1 << '\n';
+	}
+}
