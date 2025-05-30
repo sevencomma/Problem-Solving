@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s;
+
+int main(void) {
+	getline(cin, s);
+	int idx = 0;
+
+	int pos = s.find('U', idx);
+	idx = pos;
+	pos = s.find('C', idx);
+	idx = pos;
+	pos = s.find('P', idx);
+	idx = pos;
+	pos = s.find('C', idx);
+	idx = pos;
+	if (idx == string::npos)
+		cout << "I hate UCPC";
+	else
+		cout << "I love UCPC";
+}
