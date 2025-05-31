@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+typedef long long ll;
+
+int N;
+ll x;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+
+	unordered_map<ll, int> cnt;
+
+	for (int i = 0; i < N; i++) {
+		cin >> x;
+		cnt[x]++;
+	}
+
+	vector<pair<int, ll>> packs;
+	for (auto& it : cnt)
+		packs.push_back({ -it.second, it.first });
+
+	sort(packs.begin(), packs.end());
+	cout << packs[0].second;
+}
