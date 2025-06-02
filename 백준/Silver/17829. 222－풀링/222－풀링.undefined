@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+
+vector<vector<int>> func(vector<vector<int>>& arr) {
+	int n = arr.size() / 2;
+	vector<vector<int>> newArr(n, vector<int>(n));
+	vector<int> temp(4);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++) {
+			int row = i * 2;
+			int col = j * 2;
+			temp[0] = arr[row][col];
+			temp[1] = arr[row + 1][col];
+			temp[2] = arr[row][col + 1];
+			temp[3] = arr[row + 1][col + 1];
+
+			sort(temp.rbegin(), temp.rend());
+			newArr[i][j] = temp[1];
+		}
+
+	return newArr;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	vector<vector<int>> arr(N, vector<int>(N));
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> arr[i][j];
+
+	while (arr.size() > 1) {
+		arr = func(arr);
+	}
+	cout << arr[0][0];
+}
