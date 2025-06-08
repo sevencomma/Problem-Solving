@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s;
+int N;
+char cnt[26];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> s;
+		cnt[s[0] - 'a']++;
+	}
+
+	bool gigwon = true;
+	for (int i = 0; i < 26; i++)
+		if (cnt[i] >= 5) {
+			cout << char('a' + i);
+			gigwon = false;
+		}
+	if (gigwon)
+		cout << "PREDAJA";
+}
