@@ -1,0 +1,10 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int a, b, c;
+
+int main(void) {
+	cin >> a >> b >> c;
+	double x = sqrt(pow(a, 2) / (pow(b, 2) + pow(c, 2)));
+	cout << (int)(b * x) << ' ' << (int)(c * x);
+}
