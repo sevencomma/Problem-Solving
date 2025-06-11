@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string a, b, c;
+
+int main(void) {
+	cin >> a >> b >> c;
+
+	int n = a.size() - 1;
+	int m = c.size() - 1;
+
+	if (b == "+") {
+		if (n < m)
+			swap(n, m);
+		if (n == m) {
+			cout << 2;
+			for (int i = 0; i < n; i++)
+				cout << 0;
+		}
+		else {
+			cout << 1;
+			for (int i = 0; i < n - m - 1; i++)
+				cout << 0;
+			cout << 1;
+			for (int i = 0; i < m; i++)
+				cout << 0;
+		}
+	}
+	else {
+		cout << 1;
+		for (int i = 0; i < n + m; i++)
+			cout << 0;
+	}
+}
