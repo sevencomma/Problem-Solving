@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M;
+int rowCnt, colCnt;
+char board[50][50];
+
+int main(void) {
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> board[i][j];
+
+	for (int i = 0; i < N; i++) {
+		bool put = true;
+		for (int j = 0; j < M; j++)
+			if (board[i][j] == 'X') {
+				put = false;
+				break;
+			}
+
+		if (put) rowCnt++;
+	}
+
+	for (int j = 0; j < M; j++) {
+		bool put = true;
+		for (int i = 0; i < N; i++)
+			if (board[i][j] == 'X') {
+				put = false;
+				break;
+			}
+
+		if (put) colCnt++;
+	}
+	cout << max(rowCnt, colCnt);
+}
