@@ -1,0 +1,18 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N;
+int a, b, c;
+
+int main(void) {
+	cin >> N;
+
+	for (int i = 1; i <= N; i++) {
+		a += i;
+		b += i;
+		c += pow(i, 3);
+	}
+	b *= b;
+
+	cout << a << '\n' << b << '\n' << c;
+}
