@@ -1,0 +1,14 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(void) {
+	int N, M;
+
+	while (1) {
+		cin >> N;
+		if (cin.eof()) break;
+		cin >> M;
+
+		cout << M / (N + 1) << '\n';
+	}
+}
