@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string A, B;
+int cache[4001][4001];
+
+int dp(int y, int x) {
+	if (y == 0 || x == 0) return 0;
+	int& ret = cache[y][x];
+	if (ret != -1) return ret;
+	ret = 0;
+
+	if (A[y - 1] == B[x - 1])
+		ret = dp(y - 1, x - 1) + 1;
+	dp(y - 1, x);
+	dp(y, x - 1);
+
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> A >> B;
+	int n = A.size(), m = B.size();
+	memset(cache, -1, sizeof(cache));
+	dp(n, m);
+	int res = 0;
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			res = max(res, cache[i][j]);
+	cout << res;
+}
