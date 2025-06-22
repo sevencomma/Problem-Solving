@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TrieNode {
+    unordered_map<char, TrieNode*> children;
+    bool isEnd = false;
+};
+
+class Trie {
+public:
+    Trie() { root = new TrieNode(); }
+
+    void insert(const string& word) {
+        TrieNode* node = root;
+        for (char c : word) {
+            if (node->children.find(c) == node->children.end())
+                node->children[c] = new TrieNode();
+            node = node->children[c];
+        }
+        node->isEnd = true;
+    }
+
+    int countKeyPresses(const string& word) const {
+        TrieNode* node = root->children[word[0]];
+        int presses = 1;
+
+        for (int i = 1; i < word.size(); ++i) {
+            char c = word[i];
+            if (node->children.size() > 1 || node->isEnd)
+                presses++;
+            node = node->children[c];
+        }
+        return presses;
+    }
+
+private:
+    TrieNode* root;
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N;
+    while (cin >> N) {
+        Trie trie;
+        vector<string> words(N);
+
+        for (int i = 0; i < N; ++i) {
+            cin >> words[i];
+            trie.insert(words[i]);
+        }
+
+        int total = 0;
+        for (const auto& word : words)
+            total += trie.countKeyPresses(word);
+
+        cout << fixed << setprecision(2) << (double)total / N << '\n';
+    }
+}
