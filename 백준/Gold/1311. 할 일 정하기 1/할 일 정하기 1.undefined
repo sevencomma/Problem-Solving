@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define INF 123456798
+
+int TARGET;
+int N;
+int board[20][20];
+int cache[21][1 << 20 + 1];
+
+int dp(int idx, int key) {
+	if (idx == N)
+		return (key == TARGET) ? 0 : INF;
+	int& ret = cache[idx][key];
+	if (ret != -1) return ret;
+	
+	bitset<32> X = key;
+	int next_key;
+
+	ret = INF;
+	for (int i = 0; i < N; i++) {
+		if (X[i]) continue;
+		next_key = key + (1 << i);
+		ret = min(ret, dp(idx + 1, next_key) + board[idx][i]);
+	}
+	return ret;
+}
+
+int main(void) {
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> board[i][j];
+
+	TARGET = pow(2, N) - 1;
+	memset(cache, -1, sizeof(cache));
+	cout << dp(0, 0);
+}
