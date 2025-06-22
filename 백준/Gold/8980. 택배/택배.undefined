@@ -24,23 +24,20 @@ int main(void) {
 	}
 	sort(seq.begin(), seq.end(), compare);
 
-	int capacity = 0, seqIdx = 0;
-	queue<info> order;
-
-	for (int i = 0; i <= N && seqIdx < seq.size();) {
-		while (!order.empty() && order.front().to == i) {
-			capacity -= order.front().box;
-			order.pop();
-		}
+	int seqIdx = 0;
+	int capa[2001] = { 0 };
 	
+	for (int i = 0; i <= N && seqIdx < seq.size();) {
 		info& x = seq[seqIdx];
 		if (x.from <= i) {
-			int plusSize = min(C - capacity, x.box);
-			res += plusSize;
-			capacity += plusSize;
+			int plusSize = x.box;
+			for (int q = x.from; q <= x.to; q++)
+				plusSize = min(plusSize, C - capa[q]);
 
-			x.box = plusSize;
-			order.push(x);
+			res += plusSize;
+			for (int q = x.from; q < x.to; q++)
+				capa[q] += plusSize;
+
 			seqIdx++;
 		}
 		else i++;
