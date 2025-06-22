@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+#include <unordered_set>
+using namespace std;
+
+int C, N, Q;
+string s;
+
+struct TrieNode {
+    unordered_map<char, TrieNode*> children;
+    bool isEnd = false;
+};
+
+class Trie {
+public:
+    Trie() { root = new TrieNode(); }
+
+    void insert(const string& word) {
+        TrieNode* node = root;
+        for (char c : word) {
+            if (!node->children.count(c))
+                node->children[c] = new TrieNode();
+            node = node->children[c];
+        }
+        node->isEnd = true;
+    }
+
+    vector<int> getMatchingPrefixIndices(const string& word) const {
+        vector<int> indices;
+        TrieNode* node = root;
+        for (int i = 0; i < word.size(); ++i) {
+            char c = word[i];
+            if (!node->children.count(c))
+                break;
+            node = node->children.at(c);
+            if (node->isEnd)
+                indices.push_back(i);
+        }
+        return indices;
+    }
+
+private:
+    TrieNode* root;
+};
+
+int main(void) {
+    cin.tie(NULL);
+    ios_base::sync_with_stdio(false);
+
+    cin >> C >> N;
+    Trie color;
+    unordered_set<string> nicknameSet;
+
+    for (int i = 0; i < C; i++) {
+        cin >> s;
+        color.insert(s);
+    }
+
+    for (int i = 0; i < N; i++) {
+        cin >> s;
+        nicknameSet.insert(s);
+    }
+
+    cin >> Q;
+    for (int i = 0; i < Q; i++) {
+        cin >> s;
+        auto X = color.getMatchingPrefixIndices(s);
+        bool canwin = false;
+
+        for (auto& it : X) {
+            const char* nick = s.c_str() + it + 1;
+            if (nicknameSet.count(string(nick))) {
+                canwin = true;
+                break;
+            }
+        }
+        cout << (canwin ? "Yes\n" : "No\n");
+    }
+}
