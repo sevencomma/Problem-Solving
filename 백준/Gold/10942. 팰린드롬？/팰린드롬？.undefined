@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, a, b;
+int arr[2001];
+int cache[2001][2001];
+
+int dp(int l, int r) {
+	int& ret = cache[l][r];
+	if (ret != -1) return ret;
+	if (l == r) return ret = true;
+	if (l + 1 == r) return ret = (arr[l] == arr[r]);
+	if (arr[l] != arr[r]) return ret = false;
+
+	return ret = dp(l + 1, r - 1);
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	memset(cache, -1, sizeof(cache));
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
+	cin >> M;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		cout << dp(a - 1, b - 1) << '\n';
+	}
+}
