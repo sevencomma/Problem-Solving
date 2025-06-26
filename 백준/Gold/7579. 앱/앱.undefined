@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+int N, M, k;
+int memory[101];
+int cost[101];
+int cache[101][10001];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+		cin >> memory[i];
+	for (int i = 0; i < N; i++) {
+		cin >> cost[i];
+		k += cost[i];
+	}
+	
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j <= k; j++) {
+			cache[i + 1][j] = max(cache[i + 1][j], cache[i][j]);
+			cache[i + 1][j + cost[i]] = max(cache[i + 1][j + cost[i]], cache[i][j] + memory[i]);
+		}
+
+	for (int j = 0; j <= k; j++)
+		for (int i = 0; i <= N; i++)
+			if (cache[i][j] >= M) {
+				cout << j;
+				return 0;
+			}
+}
