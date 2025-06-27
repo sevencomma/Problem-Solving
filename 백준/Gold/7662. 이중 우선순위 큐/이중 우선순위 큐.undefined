@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int T, K, n;
+char c;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> T;
+	while (T--) {
+		cin >> K;
+		map<int, int> q;
+
+		for (int i = 0; i < K; i++) {
+			cin >> c >> n;
+			if (c == 'I')
+				q[n]++;
+			else {
+				if (q.empty()) continue;
+				if (n == -1) {
+					auto it = q.begin();
+					if (--(it->second) == 0)
+						q.erase(it);
+				}
+				else {
+					auto it = prev(q.end());
+					if (--(it->second) == 0)
+						q.erase(it);
+				}
+			}
+		}
+
+		if (q.empty()) cout << "EMPTY\n";
+		else cout << prev(q.end())->first << ' ' << q.begin()->first << '\n';
+	}
+}
