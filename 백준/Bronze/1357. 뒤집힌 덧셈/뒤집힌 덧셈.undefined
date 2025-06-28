@@ -1,0 +1,13 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string a, b, c;
+
+int main(void) {
+	cin >> a >> b;
+	reverse(a.begin(), a.end());
+	reverse(b.begin(), b.end());
+	c = to_string(stoi(a) + stoi(b));
+	reverse(c.begin(), c.end());
+	cout << stoi(c);
+}
