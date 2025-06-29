@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, K;
+string s;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> K >> s;
+
+	stack<char> a;
+	a.push(s[0]);
+	int idx = 1;
+	while (K > 0 && idx < N) {
+		while (!a.empty() && K > 0 && s[idx] > a.top()) {
+			a.pop();
+			K--;
+		}
+		a.push(s[idx]);
+		idx++;
+	}
+	for (int i = idx; i < N; i++) a.push(s[i]);
+	while (K > 0) {
+		a.pop();
+		K--;
+	}
+	string res = "";
+	while (!a.empty()) {
+		res += a.top();
+		a.pop();
+	}
+	reverse(res.begin(), res.end());
+	cout << res;
+}
