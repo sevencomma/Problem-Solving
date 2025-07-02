@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct homework {
+	int deadline, reward;
+};
+
+int N;
+vector<homework> hw;
+
+bool compare(homework& a, homework& b) {
+	if (a.deadline == b.deadline)
+		return a.reward > b.reward;
+	return a.deadline < b.deadline;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	hw.resize(N);
+	for (int i = 0; i < N; i++) {
+		cin >> hw[i].deadline >> hw[i].reward;
+	}
+	sort(hw.begin(), hw.end(), compare);
+
+	int cur = 0;
+	priority_queue<int, vector<int>, greater<int>> pq;
+
+	for (auto& it : hw) {
+		if (it.deadline > cur) {
+			pq.push(it.reward);
+			cur++;
+		} else {
+			if (!pq.empty() && pq.top() < it.reward) {
+				pq.pop();
+				pq.push(it.reward);
+			}
+		}
+	}
+	int res = 0;
+	while (!pq.empty()) {
+		res += pq.top();
+		pq.pop();
+	}
+	cout << res;
+}
