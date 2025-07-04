@@ -1,0 +1,21 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, x;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	vector<int> l;
+
+	for (int i = 1; i <= N; i++) {
+		cin >> x;
+		auto it = l.end();
+		while (x--)
+			it = prev(it);
+		l.insert(it, i);
+	}
+	for (auto& n : l)
+		cout << n << ' ';
+}
