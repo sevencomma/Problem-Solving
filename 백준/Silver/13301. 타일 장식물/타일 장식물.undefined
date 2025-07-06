@@ -1,0 +1,13 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+long long Tfib[81];
+
+int main(void) {
+	int N; cin >> N;
+	Tfib[1] = Tfib[2] = 1;
+	for (int i = 3; i <= N; i++)
+		Tfib[i] = Tfib[i - 1] + Tfib[i - 2];
+
+	cout << Tfib[N] * 4 + Tfib[N - 1] * 2;
+}
