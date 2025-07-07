@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dy[4] = { -1, 0, 1, 0 };
+int dx[4] = { 0, -1, 0, 1 };
+
+struct pos {
+	int y, x;
+};
+
+int N, M, K, y, x;
+bool board[101][101];
+bool visited[101][101];
+
+bool is_in_range(int y, int x) {
+	return y >= 0 && y < N && x >= 0 && x < M;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M >> K;
+	for (int i = 0; i < K; i++) {
+		cin >> y >> x;
+		board[y - 1][x - 1] = true;
+	}
+	
+	int res = 0;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++) {
+			if (visited[i][j] || !board[i][j]) continue;
+			queue<pos> q;
+			q.push({ i, j });
+			visited[i][j] = true;
+			int cnt = 1;
+			while (!q.empty()) {
+				pos cur = q.front();
+				q.pop();
+
+				for (int i = 0; i < 4; i++) {
+					int ny = cur.y + dy[i];
+					int nx = cur.x + dx[i];
+
+					if (is_in_range(ny, nx) && board[ny][nx] && !visited[ny][nx]) {
+						cnt++;
+						q.push({ ny, nx });
+						visited[ny][nx] = true;
+					}
+				}
+			}
+			res = max(res, cnt);
+		}
+	cout << res;
+}
