@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, M, a, b;
+vector<int> graph[501];
+bool visited[501];
+
+int bfs(int start) {
+	int ret = 0;
+	queue<pair<int, int>> q;
+	q.push({ start, 0 });
+	visited[start] = true;
+
+	while (!q.empty()) {
+		auto cur = q.front();
+		q.pop();
+		ret++;
+
+		if (cur.second < 2) {
+			for (auto& next : graph[cur.first]) {
+				if (visited[next]) continue;
+				visited[next] = true;
+				q.push({ next, cur.second + 1 });
+			}
+		}
+	}
+	return ret - 1;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N >> M;
+	for (int i = 0; i < M; i++) {
+		cin >> a >> b;
+		graph[a].push_back(b);
+		graph[b].push_back(a);
+	}
+
+	cout << bfs(1);
+}
