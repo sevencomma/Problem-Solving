@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, a, b, c;
+struct info {
+	int l, r;
+};
+
+struct cmp {
+	bool operator() (info& a, info& b) {
+		return a.r > b.r;
+	}
+};
+
+bool cmpL(info& a, info& b) {
+	if (a.l == b.l)
+		return a.r < b.r;
+	return a.l < b.l;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	vector<info> seq(N);
+	for (int i = 0; i < N; i++) {
+		cin >> a >> b >> c;
+		seq[i] = { b, c };
+	}
+	sort(seq.begin(), seq.end(), cmpL);
+	int res = 0;
+	priority_queue<info, vector<info>, cmp> pq;
+
+	int cur;
+	for (auto& it : seq) {
+		cur = it.l;
+		pq.push(it);
+		while (!pq.empty() && pq.top().r <= cur) {
+			pq.pop();
+		}
+		res = max(res, (int)pq.size());
+	}
+	cout << res;
+}
