@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+#include <unordered_map>
+using namespace std;
+
+int N, x;
+vector<int> nums;
+unordered_map<int, int> counts;
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	nums.resize(N);
+	for (int i = 0; i < N; i++) {
+		cin >> x;
+		nums[i] = x;
+		counts[x]++;
+	}
+	sort(nums.begin(), nums.end());
+	int ret = 0;
+	for (int i = 0; i < N; i++) {
+		counts[nums[i]]--;
+		for (int j = 0; j < N; j++) {
+			if (i == j) continue;
+			counts[nums[j]]--;
+
+			auto it = counts.find(nums[i] - nums[j]);
+			if (it != counts.end() && it->second >= 1) {
+				ret++;
+				counts[nums[j]]++;
+				break;
+			}
+			counts[nums[j]]++;
+		}
+		counts[nums[i]]++;
+	}
+	cout << ret;
+}
