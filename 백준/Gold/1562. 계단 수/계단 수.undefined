@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MOD 1000000000
+typedef long long ll;
+const int TARGET_KEY = (1 << 10) - 1;
+
+int N;
+ll cache[101][10][1 << 10];
+
+ll dp(int idx, int d, int key) {
+	if (idx == N) {
+		return (key == TARGET_KEY) ? 1 : 0;
+	}
+	ll& ret = cache[idx][d][key];
+	if (ret != -1) return ret;
+	ret = 0;
+	for (int next : {d - 1, d + 1}) {
+		if (next < 0 || next > 9) continue;
+		int newKey = key | (1 << next);
+		ret = (ret + dp(idx + 1, next, newKey)) % MOD;
+	}
+	return ret;
+}
+
+int solve(int N) {
+	memset(cache, -1, sizeof(cache));
+	ll ret = 0;
+	for (int i = 1; i <= 9; i++)
+		ret = (ret + dp(1, i, 1 << i)) % MOD;
+	return ret;
+}
+
+int main(void) {
+	cin >> N;
+	cout << solve(N);
+}
