@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string s;
+int sum;
+int starIdx;
+
+int main(void) {
+	cin >> s;
+	for (int i = 0; i < s.length(); i++) {
+		char c = s[i];
+		int w = i % 2 == 0 ? 1 : 3;
+
+		if (c == '*') {
+			starIdx = i;
+			continue;
+		}
+
+		sum += (c - '0') * w;
+	}
+
+	int w = starIdx % 2 == 0 ? 1 : 3;
+	for (int i = 0; i < 10; i++) {
+		if ((sum + i * w) % 10 == 0) {
+			cout << i;
+			break;
+		}
+	}
+}
