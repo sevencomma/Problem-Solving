@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MAX_N 100000
+
+int N, res;
+int num[MAX_N];
+int plusCache[MAX_N];
+int minusCache[MAX_N];
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 0; i < N; i++)
+		cin >> num[i];
+
+	res = plusCache[0] = minusCache[0] = 1;
+	for (int i = 1; i < N; i++) {
+		if (num[i] >= num[i - 1])
+			plusCache[i] = plusCache[i - 1] + 1;
+		else plusCache[i] = 1;
+
+		if (num[i] <= num[i - 1])
+			minusCache[i] = minusCache[i - 1] + 1;
+		else minusCache[i] = 1;
+
+		res = max(res, max(plusCache[i], minusCache[i]));
+	}
+	cout << res;
+}
