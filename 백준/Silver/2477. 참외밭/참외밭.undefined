@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dy[4] = { 0, 0, 1, -1 };
+int dx[4] = { 1, -1, 0, 0 };
+int K;
+int curX, curY, dir, dis;
+
+set<pair<int, int>> pos;
+set<int> X;
+set<int> Y;
+
+int main(void) {
+	cin >> K;
+	for (int i = 0; i < 6; i++) {
+		cin >> dir >> dis;
+		dir--;
+		pos.insert({ curX, curY });
+		X.insert(curX);
+		Y.insert(curY);
+		curX += dx[dir] * dis;
+		curY += dy[dir] * dis;
+	}
+
+	vector<int> x(X.begin(), X.end());
+	vector<int> y(Y.begin(), Y.end());
+
+	int area = abs(x[2] - x[0]) * abs(y[2] - y[0]);
+	int noX, noY;
+	for (int a : {0, 2})
+		for (int b : {0, 2}) {
+			if (pos.contains({ x[a], y[b] }))
+				continue;
+			noX = x[a], noY = y[b];
+		}
+	int minusArea = abs(x[1] - noX) * abs(y[1] - noY);
+	cout << (area - minusArea) * K;
+}
