@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, W;
+int pos[1001][2];
+int dist[1001][1001];
+int origDist[2][1001];
+int cache[1001][1001];
+bool choice[1001][1001];
+
+void input() {
+	cin >> N >> W;
+	for (int i = 1; i <= W; i++) {
+		cin >> pos[i][0] >> pos[i][1];
+	}
+}
+
+void calcDist() {
+	for (int i = 1; i <= W; i++)
+		for (int j = i + 1; j <= W; j++) {
+			dist[i][j] = dist[j][i] = abs(pos[i][0] - pos[j][0]) + abs(pos[i][1] - pos[j][1]);
+		}
+	for (int i = 1; i <= W; i++) {
+		origDist[0][i] = pos[i][0] + pos[i][1] - 2;
+		origDist[1][i] = abs(N - pos[i][0]) + abs(N - pos[i][1]);
+	}
+}
+
+int dp(int st, int nd) {
+	if (st == W || nd == W)
+		return 0;
+	int& ret = cache[st][nd];
+	if (ret != -1) return ret;
+	int d1, d2, next = max(st, nd) + 1;
+	
+	if (st == 0) d1 = origDist[0][next];
+	else d1 = dist[st][next];
+
+	if (nd == 0) d2 = origDist[1][next];
+	else d2 = dist[nd][next];
+
+	int res1 = dp(next, nd) + d1;
+	int res2 = dp(st, next) + d2;
+	int p;
+
+	if (res1 < res2) {
+		ret = res1;
+		p = 0;
+	} else {
+		ret = res2;
+		p = 1;
+	}
+
+	choice[st][nd] = p;
+	return ret;
+}
+
+vector<int> restore() {
+	int st = 0, nd = 0;
+	vector<int> ret;
+
+	while (st < W && nd < W) {
+		int next = max(st, nd) + 1;
+		if (choice[st][nd] == 0) {
+			st = next;
+			ret.push_back(1);
+		}
+		else {
+			nd = next;
+			ret.push_back(2);
+		}
+	}
+	return ret;
+}
+
+int main(void) {
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	input();
+	calcDist();
+	memset(cache, -1, sizeof(cache));
+
+	cout << dp(0, 0) << '\n';
+	auto path = restore();
+	for (auto it : path)
+		cout << it << '\n';
+}
