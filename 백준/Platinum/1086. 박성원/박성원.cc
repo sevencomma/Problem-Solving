@@ -36,16 +36,12 @@ ll dp(int key, int r) {
 	ll& ret = cache[key][r];
 	if (ret != -1) return ret;
 	ret = 0;
-	
-	bitset<20> x = key;
 
 	for (int i = 0; i < N; i++) {
-		if (x[i]) continue;
+		if (key & (1 << i)) continue;
 
-		x[i] = true;
 		int newR = concat_rem(r, i);
-		ret += dp(x.to_ullong(), newR);
-		x[i] = false;
+		ret += dp(key | (1 << i), newR);
 	}
 	return ret;
 }
