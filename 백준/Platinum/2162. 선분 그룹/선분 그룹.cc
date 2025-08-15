@@ -82,12 +82,9 @@ int main(void) {
 				Union(i, j);
 		}
 
-	for (int i = 0; i < N; i++)
-		Find(i);
-
 	unordered_map<int, int> cnt;
 	for (int i = 0; i < N; i++)
-		cnt[Parent[i]]++;
+		cnt[Find(i)]++;
 
 	cout << cnt.size() << '\n';
 	int res = 0;
