@@ -29,17 +29,16 @@ int main(void) {
 		for (int i = 0; i < N; i++)
 			pq.push({ arr[i], i });
 
-		priority_queue<int> has;
+		vector<int> has;
 		long long res = 0;
 		for (int i = 0; i < N; i++) {
 			if (!pq.empty() && pq.top().idx > i) { // 사
-				has.push(arr[i]);
+				has.push_back(arr[i]);
 			}
 			else {	// 팔아 or 냅둬
-				while (!has.empty()) {
-					res += arr[i] - has.top();
-					has.pop();
-				}
+				for (auto& it : has)
+					res += arr[i] - it;
+				has.clear();
 				while (!pq.empty() && pq.top().idx <= i)
 					pq.pop();
 			}
