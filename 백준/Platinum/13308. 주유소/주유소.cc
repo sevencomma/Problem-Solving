@@ -1,26 +1,43 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+typedef long long ll;
 #define INF 123456789
 
 int N, M, a, b, c;
 int cost[2501];
 vector<pair<int, int>> graph[2501];
-int cache[2501][2501];
+ll cache[2501][2501];
 // idx, 지금까지 만난 최소cost : 총 최소 금액
 
-int dp(int cur, int minCost) {
-	if (cur == N) return 0;
-	int& ret = cache[cur][minCost];
-	if (ret != -1) return ret;
-	ret = INF;
+ll dijkstra(int start) {
+	priority_queue<tuple<ll, int, int>, vector<tuple<ll, int, int>>, greater<tuple<ll, int, int>>> pq;
+	pq.push({ 0, start, cost[start] });
+	cache[start][cost[start]] = 0;
 
-	int next, d;
-	for (auto& it : graph[cur]) {
-		tie(next, d) = it;
-		ret = min(ret, dp(next, min(minCost, cost[next])) + d * minCost);
+	while (!pq.empty()) {
+		ll dist;
+		int cur, minCost;
+		tie(dist, cur, minCost) = pq.top();
+		pq.pop();
+
+		if (cur == N)
+			return dist;
+		if (cache[cur][minCost] < dist)
+			continue;
+
+		int next, d;
+		for (auto& it : graph[cur]) {
+			tie(next, d) = it;
+			int newMinCost = min(minCost, cost[next]);
+			ll newDist = dist + (ll)d * (ll)minCost;
+			if (cache[next][newMinCost] == -1 || cache[next][newMinCost] > newDist) {
+				cache[next][newMinCost] = newDist;
+				pq.push({ newDist, next, newMinCost });
+			}
+		}
 	}
-	return ret;
+	return -1;
 }
 
 int main(void) {
@@ -37,5 +54,5 @@ int main(void) {
 		graph[b].push_back({ a, c });
 	}
 
-	cout << dp(1, cost[1]);
+	cout << dijkstra(1);
 }
